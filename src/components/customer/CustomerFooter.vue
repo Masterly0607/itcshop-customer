@@ -1,5 +1,3 @@
 <template>
-    <div>
-        Customer Footer
-    </div>
+  <!-- <div>Customer Footer</div> -->
 </template>

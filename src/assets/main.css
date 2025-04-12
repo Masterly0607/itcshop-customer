@@ -1,1 +1,9 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+@plugin "daisyui";
+
+/*  */
+@layer components {
+  .container-default {
+    @apply w-full max-w-screen-xl mx-auto px-10;
+  }
+}
