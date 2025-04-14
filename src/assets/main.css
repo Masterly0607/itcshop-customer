@@ -1,7 +1,40 @@
 @import 'tailwindcss';
 @plugin "daisyui";
 
-/*  */
+/* Daisy theme */
+@plugin "daisyui/theme" {
+  name: 'bumblebee';
+  default: true;
+  --color-primary: #e0cb38; /* golden yellow */
+  --color-primary-content: #1a1a1a; /* dark text on primary */
+
+  --color-secondary: #f472b6; /* soft pink */
+  --color-secondary-content: #ffffff;
+
+  --color-accent: #38bdf8; /* sky blue */
+  --color-accent-content: #ffffff;
+
+  --color-neutral: #1f2937; /* dark gray */
+  --color-neutral-content: #ffffff;
+
+  --color-base-100: #ffffff; /* main background */
+  --color-base-200: #f3f4f6; /* lighter background */
+  --color-base-300: #e5e7eb; /* border/background */
+  --color-base-content: #1f2937; /* main text */
+
+  --color-info: #3abff8; /* info color */
+  --color-info-content: #ffffff;
+
+  --color-success: #36d399; /* green success */
+  --color-success-content: #ffffff;
+
+  --color-warning: #fbbf24; /* yellow warning */
+  --color-warning-content: #1f2937;
+
+  --color-error: #f87272; /* red error */
+  --color-error-content: #ffffff;
+}
+/* Tailwind components */
 @layer components {
   .container-default {
     @apply w-full max-w-screen-xl mx-auto px-10;

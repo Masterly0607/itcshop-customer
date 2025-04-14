@@ -1,3 +1,3 @@
 <template>
-    <div>Shop Page</div>
+  <div class="default-container">Shop Page</div>
 </template>
