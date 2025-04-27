@@ -16,8 +16,8 @@
     </section>
 
     <!-- Navbar Component -->
-    <section class="container-default">
-      <div class="navbar p-0">
+    <section class="bg-base-200">
+      <div class="navbar p-0 container-default">
         <div class="flex-1">
           <RouterLink class="btn btn-ghost text-xl" :to="{ name: 'Shop' }">ITC SHOP</RouterLink>
         </div>
@@ -41,7 +41,7 @@
               <li><RouterLink :to="{ name: 'Signup' }">Sign Up</RouterLink></li>
             </ul>
           </div>
-          <label class="input border-none bg-gray-100">
+          <label class="input border-none bg-gray-200">
             <input
               type="search"
               required
