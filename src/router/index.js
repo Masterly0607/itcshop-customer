@@ -95,7 +95,7 @@ const router = createRouter({
         {
           path: '/login',
           name: 'Login',
-          component: () => import('@/views/auth/LoginPage.vue'),
+          component: () => import('@/views/auth/LogInPage.vue'),
         },
         {
           path: '/signup',
@@ -108,7 +108,7 @@ const router = createRouter({
           component: () => import('@/views/auth/ForgotPasswordPage.vue'),
         },
         {
-          path: '/reset-passord',
+          path: '/reset-password',
           name: 'ResetPassword',
           component: () => import('@/views/auth/ResetPasswordPage.vue'),
         },

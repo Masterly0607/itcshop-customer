@@ -1,5 +1,5 @@
 <template>
-    <div>
-        Customer AuthLayout
+    <div >
+        <RouterView></RouterView>
     </div>
 </template>
