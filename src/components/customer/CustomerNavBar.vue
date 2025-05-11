@@ -30,14 +30,16 @@
               <li><RouterLink :to="{ name: 'Home' }">Home</RouterLink></li>
               <li><RouterLink :to="{ name: 'Shop' }">Shop</RouterLink></li>
               <li>
-                <details>
-                  <summary>Categories</summary>
-                  <ul class="bg-base-100 rounded-t-none p-2 z-50">
-                    <li><a>Phone</a></li>
-                    <li><a>Computer</a></li>
-                  </ul>
-                </details>
-              </li>
+  <details>
+    <summary>Categories</summary>
+    <ul class="bg-base-100 rounded-t-none p-2 z-50">
+      <li v-for="cat in categories" :key="cat">
+        <a @click.prevent="goToCategory(cat)">{{ cat }}</a>
+      </li>
+    </ul>
+  </details>
+</li>
+
               <li><RouterLink :to="{ name: 'Signup' }">Sign Up</RouterLink></li>
             </ul>
           </div>
@@ -85,6 +87,7 @@
                       d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
                     />
                   </svg>
+                  <span class="badge badge-sm indicator-item">{{ wishlistStore.wishlistCount }}</span>
                 </RouterLink>
               </div>
             </div>
@@ -108,7 +111,7 @@
                   d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                 />
               </svg>
-              <span class="badge badge-sm indicator-item">8</span>
+              <span class="badge badge-sm indicator-item">{{ cartStore.cartCount }}</span>
             </div>
           </div>
 
@@ -179,8 +182,20 @@
 </template>
 <script setup>
 import { useRouter } from 'vue-router'
-const route = useRouter()
-const goToCart = () => {
-  route.push({ name: 'Cart' })
+import { useCartStore } from '@/stores/cartStore' 
+
+const router = useRouter()
+const cartStore = useCartStore() 
+
+const goToCart = () => router.push({ name: 'Cart' })
+
+// Static category list
+const categories = ['Phones', 'Laptops', 'Smartwatches', 'Accessories']
+
+const goToCategory = (category) => {
+  router.push({ name: 'Shop', query: { category } })
 }
+import { useWishlistStore } from '@/stores/wishlistStore'
+const wishlistStore = useWishlistStore();
+
 </script>
