@@ -1,7 +1,10 @@
 <template>
-  <section class="container-default my-10">
-    <div class="text-4xl font-bold mb-15 text-primary">
-      Wishlist ({{ wishlistStore.wishlistCount }})
+  <section class="container-default">
+    <div
+      class="text-lg text-primary my-10 font-semibold"
+      style="font-family: 'Orbitron', sans-serif"
+    >
+      Wishlist <span class="text-sm">({{ wishlistStore.wishlistCount }})</span>
     </div>
 
     <div

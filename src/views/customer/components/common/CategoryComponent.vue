@@ -4,22 +4,25 @@
     @click="selectCategory"
   >
     <div class="flex flex-col items-center text-gray-600 gap-4">
-      <div v-html="category.icon"></div>
+      <!-- Dynamically render the icon component -->
+      <font-awesome-icon :icon="['fas', category.icon]" class="text-2xl" />
+
       <span>{{ category.label }}</span>
     </div>
   </button>
 </template>
 
 <script setup>
+// Props
 const props = defineProps({
   category: {
     type: Object,
-    required: true
-  }
+    required: true,
+  },
 })
 
+// Emits
 const emit = defineEmits(['select'])
-
 const selectCategory = () => {
   emit('select', props.category.label)
 }

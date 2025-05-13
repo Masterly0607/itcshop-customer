@@ -16,8 +16,8 @@
     </section>
 
     <!-- Navbar Component -->
-    <section class="bg-base-200">
-      <div class="navbar p-0 container-default">
+    <section class="bg-base-200" style="font-family: 'Orbitron', sans-serif">
+      <div class="navbar p-0 container-default pr-10">
         <div class="flex-1">
           <RouterLink class="btn btn-ghost text-xl" :to="{ name: 'Shop' }">ITC SHOP</RouterLink>
         </div>
@@ -26,29 +26,48 @@
         <!-- Desktop Menu -->
         <div class="gap-2 items-center hidden md:flex">
           <div class="flex-none">
-            <ul class="menu menu-horizontal px-1">
-              <li><RouterLink :to="{ name: 'Home' }">Home</RouterLink></li>
-              <li><RouterLink :to="{ name: 'Shop' }">Shop</RouterLink></li>
+            <ul class="menu menu-horizontal text-xs">
               <li>
-  <details>
-    <summary>Categories</summary>
-    <ul class="bg-base-100 rounded-t-none p-2 z-50">
-      <li v-for="cat in categories" :key="cat">
-        <a @click.prevent="goToCategory(cat)">{{ cat }}</a>
-      </li>
-    </ul>
-  </details>
-</li>
-
-              <li><RouterLink :to="{ name: 'Signup' }">Sign Up</RouterLink></li>
+                <RouterLink :to="{ name: 'Home' }" exact-active-class="text-primary font-bold">
+                  Home
+                </RouterLink>
+              </li>
+              <li>
+                <RouterLink :to="{ name: 'Shop' }" exact-active-class="text-primary font-bold">
+                  Shop
+                </RouterLink>
+              </li>
+              <li>
+                <details>
+                  <summary>Categories</summary>
+                  <ul class="bg-base-100 rounded-t-none p-2 z-50 flex items-center">
+                    <li>
+                      <RouterLink
+                        v-for="cate in categoriesStore.categoriesList"
+                        :key="cate.label"
+                        :to="{ name: 'Shop', query: { category: cate.label } }"
+                      >
+                        {{ cate.label }}
+                      </RouterLink>
+                    </li>
+                  </ul>
+                </details>
+              </li>
+              <li>
+                <RouterLink :to="{ name: 'AboutUs' }" exact-active-class="text-primary font-bold">
+                  About Us
+                </RouterLink>
+              </li>
             </ul>
           </div>
+
+          <!-- Search Input -->
           <label class="input border-none bg-gray-200">
             <input
               type="search"
               required
               placeholder="What are you looking for?"
-              class="w-48 input-md"
+              class="w-48 input-sm"
             />
             <svg
               class="h-[1.3em] text-black"
@@ -67,7 +86,7 @@
               </g>
             </svg>
           </label>
-          <!-- Wistlist Icon -->
+          <!-- Wistlist-->
 
           <div class="flex-none">
             <div tabindex="0" role="button" class="btn btn-ghost btn-circle text-black">
@@ -87,14 +106,15 @@
                       d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
                     />
                   </svg>
-                  <span class="badge badge-sm indicator-item">{{ wishlistStore.wishlistCount }}</span>
+                  <span class="badge badge-sm indicator-item">{{
+                    wishlistStore.wishlistCount
+                  }}</span>
                 </RouterLink>
               </div>
             </div>
           </div>
 
-          <!-- Cart Icon -->
-
+          <!-- Cart-->
           <div class="btn btn-ghost btn-circle" @click="goToCart">
             <div class="indicator">
               <svg
@@ -115,30 +135,34 @@
             </div>
           </div>
 
-          <!-- Profile(Signed Up) -->
-          <!-- <div class="dropdown dropdown-end">
-            <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-              <div class="w-10 rounded-full">
-                <img
-                  alt="Tailwind CSS Navbar component"
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                />
-              </div>
-            </div>
-            <ul
-              tabindex="0"
-              class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
-            >
-              <li>
-                <a class="justify-between">
-                  Profile
-                  <span class="badge">New</span>
-                </a>
+          <!-- SignUp button -->
+          <div class="flex-none">
+            <ul class="menu menu-horizontal px-1">
+              <li v-if="!isLoggedIn">
+                <RouterLink :to="{ name: 'Signup' }" class="btn bg-gray-200">Sign Up</RouterLink>
               </li>
-              <li><a>Settings</a></li>
-              <li><a>Logout</a></li>
+              <li v-else class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                  <div class="w-10 rounded-full">
+                    <img
+                      alt="User avatar"
+                      src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                    />
+                  </div>
+                </div>
+                <ul
+                  tabindex="0"
+                  class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow"
+                >
+                  <li>
+                    <a class="justify-between"> My Account </a>
+                  </li>
+                  <li><a>Settings</a></li>
+                  <li><a>Logout</a></li>
+                </ul>
+              </li>
             </ul>
-          </div> -->
+          </div>
         </div>
         <!-- Mobile Menu -->
         <div class="md:hidden dropdown dropdown-end">
@@ -182,20 +206,16 @@
 </template>
 <script setup>
 import { useRouter } from 'vue-router'
-import { useCartStore } from '@/stores/cartStore' 
-
+import { useCartStore } from '@/stores/cartStore'
+import { useCategoriesStore } from '@/stores/categoriesStore'
+const categoriesStore = useCategoriesStore()
 const router = useRouter()
-const cartStore = useCartStore() 
+const cartStore = useCartStore()
 
 const goToCart = () => router.push({ name: 'Cart' })
 
-// Static category list
-const categories = ['Phones', 'Laptops', 'Smartwatches', 'Accessories']
-
-const goToCategory = (category) => {
-  router.push({ name: 'Shop', query: { category } })
-}
 import { useWishlistStore } from '@/stores/wishlistStore'
-const wishlistStore = useWishlistStore();
+const wishlistStore = useWishlistStore()
 
+const isLoggedIn = false // Change to false to hide dropdown
 </script>

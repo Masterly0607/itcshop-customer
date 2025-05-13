@@ -5,7 +5,7 @@
     <CustomerNavBar />
 
     <!-- Main content -->
-    <main class="flex-1 container-default mt-10">
+    <main class="flex-1">
       <Transition class="animate__animated animate__backInLeft">
         <router-view />
       </Transition>

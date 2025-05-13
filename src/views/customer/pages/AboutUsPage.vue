@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="w-1/2 bg-red-300 h-full">
-        <img src="/img/image.png" alt="" srcset="" />
+        <img src="/img/people.jpg" alt="" srcset="" />
       </div>
     </div>
 

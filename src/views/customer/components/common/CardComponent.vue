@@ -1,5 +1,5 @@
 <template>
-  <div class="card bg-base-100 w-64 shadow-sm hover:shadow-md transition-all duration-300">
+  <div class="card bg-base-200 w-64 shadow-sm hover:shadow-md transition-all duration-300">
     <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }">
       <figure>
         <img
@@ -10,10 +10,12 @@
       </figure>
       <div class="card-body">
         <div class="flex flex-col gap-2">
-          <h2 class="card-title">{{ product.name }}</h2>
+          <h2 class="card-title text-sm">{{ product.name }}</h2>
           <p>
-            <span class="text-primary pr-3">${{ product.price }}</span>
-            <span v-if="product.oldPrice" class="line-through">${{ product.oldPrice }}</span>
+            <span class="text-primary pr-3 text-xs">${{ product.price }}</span>
+            <span v-if="product.oldPrice" class="line-through text-xs"
+              >${{ product.oldPrice }}</span
+            >
           </p>
           <div class="rating rating-xs">
             <div
@@ -49,9 +51,9 @@
         </svg>
       </button>
 
-      <button class="btn btn-primary" @click="handleAddToCart">
+      <div class="btn btn-primary text-white btn-sm" @click="handleAddToCart">
         {{ isInCart ? 'Go To Cart' : 'Add To Cart' }}
-      </button>
+      </div>
     </div>
   </div>
 </template>

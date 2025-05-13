@@ -1,14 +1,14 @@
 <template>
-  <section class="container-default mt-10">
-    <h2 class="text-4xl font-bold mb-10 text-primary">Cart ({{ cartStore.cartCount }})</h2>
+  <section class="container-default">
+    <div class="text-xl font-semibold text-primary mb-10">Cart</div>
 
     <div v-if="cartStore.cartItems.length > 0" class="w-full space-y-4">
       <!-- Header -->
-      <div class="flex font-semibold shadow-sm py-4 rounded-xl bg-gray-100 px-6">
-        <div class="w-1/4">Product</div>
-        <div class="w-1/4 text-center">Price</div>
-        <div class="w-1/4 text-center">Quantity</div>
-        <div class="w-1/4 text-center">Subtotal</div>
+      <div class="flex shadow-sm py-4 rounded-xl bg-gray-100 px-6">
+        <div class="w-1/4 text-sm">Product</div>
+        <div class="w-1/4 text-center text-sm">Price</div>
+        <div class="w-1/4 text-center text-sm">Quantity</div>
+        <div class="w-1/4 text-center text-sm">Subtotal</div>
       </div>
 
       <!-- Items -->
@@ -20,14 +20,14 @@
         <!-- Product Info -->
         <div class="w-1/4 flex items-center gap-3">
           <img :src="item.img" alt="item image" class="h-16 w-16 object-cover rounded" />
-          <span class="truncate">{{ item.name }}</span>
+          <span class="truncate text-sm">{{ item.name }}</span>
         </div>
 
         <!-- Price -->
-        <div class="w-1/4 text-center">${{ item.price }}</div>
+        <div class="w-1/4 text-center text-sm">${{ item.price }}</div>
 
         <!-- Quantity -->
-        <div class="w-1/4 text-center">
+        <div class="w-1/4 text-center text-sm">
           <select v-model="item.quantity" class="border rounded px-2 py-1 w-16 text-center">
             <option v-for="n in 10" :key="n" :value="n">
               {{ n.toString().padStart(2, '0') }}
@@ -36,15 +36,17 @@
         </div>
 
         <!-- Subtotal -->
-        <div class="w-1/4 text-center">${{ (item.price * item.quantity).toFixed(2) }}</div>
+        <div class="w-1/4 text-center text-sm">${{ (item.price * item.quantity).toFixed(2) }}</div>
       </div>
 
-      <button class="btn btn-outline px-10 py-5 mt-3 mb-10">Return To Shop</button>
+      <button class="btn btn-outline px-10 py-5 mt-3 mb-10 btn-sm">Return To Shop</button>
 
       <div class="flex items-start gap-40 justify-between">
         <div class="flex gap-3 w-1/2">
           <input type="text" placeholder="Coupon Code" class="input input-neutral" />
-          <button class="btn btn-primary px-10 py-5 text-white font-light">Apply Coupon</button>
+          <button class="btn btn-primary px-10 py-5 text-white font-light btn-sm">
+            Apply Coupon
+          </button>
         </div>
 
         <div class="w-1/2">
@@ -52,21 +54,21 @@
             <div class="mb-7 text-xl font-medium">Cart Total</div>
             <div>
               <div>
-                <div class="flex justify-between">
+                <div class="flex justify-between text-sm">
                   <span>Subtotal:</span>
                   <span>$1750</span>
                 </div>
                 <div class="divider mb-0"></div>
               </div>
               <div>
-                <div class="flex justify-between">
+                <div class="flex justify-between text-sm">
                   <span>Shipping:</span>
                   <span>Free</span>
                 </div>
                 <div class="divider mb-0"></div>
               </div>
               <div>
-                <div class="flex justify-between">
+                <div class="flex justify-between text-sm">
                   <span>Total:</span>
                   <span>$1750</span>
                 </div>

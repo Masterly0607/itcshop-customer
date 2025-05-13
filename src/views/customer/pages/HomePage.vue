@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Slider Component -->
-    <section class="container-default mt-2">
+    <section>
       <swiper
         :modules="[EffectFade, Pagination, Autoplay]"
         effect="fade"
@@ -11,8 +11,12 @@
         loop
         class="z-0 w-full h-[250px] sm:h-[350px] md:h-[450px] lg:h-[500px] relative"
       >
-        <swiper-slide v-for="photo in sildePhotos" :key="photo" class="relative w-full h-full">
-          <img :src="`/img/${photo}`" alt="Slide image" class="w-full h-full object-cover" />
+        <swiper-slide
+          v-for="photo in sildePhotos"
+          :key="photo"
+          class="relative w-full h-full max-w-screen-xl"
+        >
+          <img :src="`/img/slide/${photo}`" alt="Slide image" class="w-full h-full object-cover" />
           <div class="absolute bottom-[40%] left-6 sm:left-10">
             <button
               class="text-xs sm:text-sm md:text-base bg-white text-black px-3 py-1 sm:px-4 sm:py-2 rounded hover:bg-primary transition"
@@ -31,7 +35,7 @@
 
       <div class="flex flex-wrap justify-between items-center gap-5">
         <div class="flex flex-wrap items-center gap-15">
-          <span class="text-2xl md:text-3xl lg:text-4xl font-semibold">Flash Sales</span>
+          <span class="section-title">Flash Sales</span>
 
           <div class="grid grid-flow-col auto-cols-max gap-3 sm:gap-5 text-center">
             <div class="flex flex-col items-center">
@@ -133,9 +137,7 @@
 
       <!-- View All -->
       <div class="mt-10 text-center">
-        <button class="btn btn-active btn-primary text-white btn-wide" @click="goToShop">
-          View All Products
-        </button>
+        <div class="btn btn-primary text-white btn-wide" @click="goToShop">View All Products</div>
       </div>
 
       <div class="divider mt-10"></div>
@@ -146,7 +148,7 @@
       <SectionHeader title="Categories" />
 
       <div class="flex justify-between">
-        <span class="text-2xl md:text-3xl lg:text-4xl font-semibold">Browse By Category</span>
+        <span class="section-title">Browse By Category</span>
         <div class="flex gap-2">
           <button
             class="btn btn-circle btn-md"
@@ -223,7 +225,7 @@
       <SectionHeader title="This Month" />
 
       <div class="flex justify-between items-center">
-        <span class="text-2xl md:text-3xl lg:text-4xl font-semibold">Best Selling Products</span>
+        <span class="section-title">Best Selling Products</span>
         <button class="btn btn-primary text-white px-7">View All</button>
       </div>
 
@@ -237,11 +239,11 @@
     <!-- New Arrival -->
     <section class="container-default mt-20">
       <SectionHeader title="Featured" />
-      <span class="text-2xl md:text-3xl lg:text-4xl font-semibold">New Arrival</span>
+      <span class="section-title">New Arrival</span>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 h-[500px] mt-10">
         <div class="bg-red-200 relative">
           <img
-            src="/img/keyboard.png"
+            src="/img/products/watch.jpg"
             alt="Play Station"
             srcset=""
             class="absolute inset-0 w-full h-full object-cover"
@@ -264,7 +266,7 @@
           <div class="grid grid-row-2 gap-4">
             <div class="bg-red-200 h-[250px] relative">
               <img
-                src="/img/1.avif"
+                src="/img/slide/2.avif"
                 alt="Play Station"
                 srcset=""
                 class="absolute inset-0 w-full h-full object-cover"
@@ -285,7 +287,7 @@
             <div class="grid grid-cols-2 gap-4 h-[250px]">
               <div class="bg-green-200 relative">
                 <img
-                  src="/img/2.avif"
+                  src="/img/slide/2.avif"
                   alt="Play Station"
                   srcset=""
                   class="absolute inset-0 w-full h-full object-cover"
@@ -305,7 +307,7 @@
               </div>
               <div class="bg-green-200 relative">
                 <img
-                  src="/img/3.avif"
+                  src="/img/slide/2.avif"
                   alt="Play Station"
                   srcset=""
                   class="absolute inset-0 w-full h-full object-cover"
@@ -339,7 +341,7 @@
       </div>
 
       <div class="text-center mt-10">
-        <button class="btn btn-primary" @click="goToShop">View All Products</button>
+        <div class="btn btn-primary text-white btn-wide" @click="goToShop">View All Products</div>
       </div>
 
       <div class="grid sm:grid-cols-3 gap-8 text-center py-8 px-4 mt-10">
@@ -476,7 +478,7 @@ const goCategoryPrev = () => {
 }
 
 // Data
-const sildePhotos = ['1.avif', '2.avif', '3.avif', '4.avif']
+const sildePhotos = ['1.jpg', '2.avif', '3.jpg', '4.jpg']
 
 // Countdown
 const targetDate = new Date()
