@@ -8,8 +8,8 @@
     <span class="loading loading-spinner loading-lg text-primary"></span>
   </div>
 
-  <section>
-    <div class="text-4xl font-bold text-primary mb-5">CheckOut</div>
+  <section class="container-default">
+    <div class="page-title">CheckOut</div>
     <div class="mb-5 font-medium text-2xl">Billing Details</div>
 
     <div class="flex items-start gap-10">
@@ -83,14 +83,14 @@
           <div class="flex flex-col gap-6">
             <div class="flex justify-between">
               <div class="flex items-center gap-2">
-                <img src="/img/keyboard.png" alt="" srcset="" class="h-10 w-10" />
+                <img src="/img/products/keyboard.png" alt="" srcset="" class="h-10 w-10" />
                 <span>LCD</span>
               </div>
               <div>$650</div>
             </div>
             <div class="flex justify-between">
               <div class="flex items-center gap-2">
-                <img src="/img/keyboard.png" alt="" srcset="" class="h-10 w-10" />
+                <img src="/img/products/keyboard.png" alt="" srcset="" class="h-10 w-10" />
                 <span>LCD</span>
               </div>
               <div>$650</div>

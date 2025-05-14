@@ -1,21 +1,23 @@
 <template>
-  <div class="grid grid-cols-[1.3fr_1fr] gap-3 h-[400px] mt-10">
-    <div class="bg-red-300">
-      <img src="/img/signup.png" alt="adasd" srcset="" class="h-full" />
+  <div class="flex gap-10 items-center p-10 shadow-2xl rounded-lg bg-white max-w-4xl">
+    <!-- Image -->
+    <div class="w-1/2">
+      <img src="/img/signup.jpg" alt="signup" class="w-full h-full object-cover" />
     </div>
 
-    <div class="p-30">
+    <!-- Form -->
+    <div class="w-1/2">
       <div class="flex flex-col">
         <div class="mb-8">
-          <div class="font-medium text-3xl mb-5">Create an account</div>
-          <div class="text-sm">Enter your details below</div>
+          <div class="font-medium text-3xl mb-5 text-center">Create an account</div>
+          <div class="text-sm text-center">Enter your details below</div>
 
-          <!-- Form -->
+          <!-- Form Inputs -->
           <form action="" class="flex flex-col gap-5 mt-5">
             <input
               type="text"
               placeholder="Name"
-              class="input input-ghost w-full border-b-2 border-gray-300 border-0 rounded-none"
+              class="input input-ghost w-full border-b-2 border-gray-300 border-0 rounded-none focus:ring-2 focus:ring-primary focus:outline-none"
               pattern="[A-Za-z][A-Za-z0-9\-]*"
               minlength="3"
               maxlength="30"
@@ -24,23 +26,28 @@
             <input
               type="email"
               placeholder="Email or Phone Number"
-              class="input input-ghost border-b-2 border-gray-300 border-0 rounded-none w-full"
+              class="focus:ring-2 focus:ring-primary focus:outline-none input input-ghost border-b-2 border-gray-300 border-0 rounded-none w-full"
               required
             />
             <input
               type="password"
               placeholder="Password"
-              class="input input-ghost border-b-2 border-gray-300 border-0 rounded-none w-full"
+              class="focus:ring-2 focus:ring-primary focus:outline-none input input-ghost border-b-2 border-gray-300 border-0 rounded-none w-full"
               required
               minlength="8"
-              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+              pattern="(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
               title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
             />
           </form>
-          <!-- Button -->
+
+          <!-- Buttons -->
           <div class="flex flex-col gap-5 mt-10">
-            <button class="btn btn-block btn-primary text-white py-6 text-lg font-light">Create Account</button>
-            <button class="btn bg-white text-black border-[#e5e5e5] btn-block p-6 text-lg font-light">
+            <button class="btn btn-block btn-primary text-white py-6 text-lg font-light">
+              Create Account
+            </button>
+            <button
+              class="btn bg-white text-black border-[#e5e5e5] btn-block p-6 text-lg font-light"
+            >
               <svg
                 aria-label="Google logo"
                 width="30"
@@ -65,25 +72,19 @@
                   ></path>
                 </g>
               </svg>
-              <span class="pl-1">
-                Sign up with Google
- 
-              </span>
-              
+              <span class="pl-1"> Sign up with Google </span>
             </button>
           </div>
 
+          <!-- Footer -->
           <div class="text-center mt-8">
-        <span class=" text-gray-500 pr-2">Already have account? </span>
-        <RouterLink :to="{ name: 'Login' }">
-          <span class="underline">Log in</span>
-        </RouterLink>
-      </div>
+            <span class="text-gray-500 pr-2">Already have account?</span>
+            <RouterLink :to="{ name: 'Login' }">
+              <span class="underline">Log in</span>
+            </RouterLink>
+          </div>
         </div>
-        
       </div>
-
-   
     </div>
   </div>
 </template>

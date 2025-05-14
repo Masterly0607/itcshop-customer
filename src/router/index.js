@@ -6,7 +6,7 @@ const router = createRouter({
     // Customer Routes
     {
       path: '/',
-      component: () => import('@/layouts/CustomerLayout.vue'),
+      component: () => import('@/layouts/customer/DefaultLayout.vue'),
       children: [
         { path: '', name: 'Home', component: () => import('@/views/customer/pages/HomePage.vue') },
         {
@@ -35,7 +35,7 @@ const router = createRouter({
           component: () => import('@/views/customer/pages/CheckOutPage.vue'),
         },
         {
-          path: 'orders',
+          path: 'order-history',
           name: 'OrderHistory',
           component: () => import('@/views/customer/pages/OrderHistoryPage.vue'),
         },
@@ -44,11 +44,7 @@ const router = createRouter({
           name: 'WishList',
           component: () => import('@/views/customer/pages/WishListPage.vue'),
         },
-        {
-          path: 'account',
-          name: 'AccountDashboard',
-          component: () => import('@/views/customer/pages/AccountDashboardPage.vue'),
-        },
+
         {
           path: 'about-us',
           name: 'AboutUs',
@@ -59,6 +55,37 @@ const router = createRouter({
           name: 'ContactUs',
           component: () => import('@/views/customer/pages/ContactUsPage.vue'),
         },
+      ],
+    },
+
+    // Customer Account Routes
+    {
+      path: '/account',
+      component: () => import('@/layouts/customer/DashboardLayout.vue'),
+      children: [
+        {
+          path: '',
+          name: 'AccountDashboard',
+          component: () => import('@/views/customer/pages/AccountDashboardPage.vue'),
+        },
+        {
+          path: 'order-history',
+          name: 'OrderHistory',
+          component: () => import('@/views/customer/pages/OrderHistoryPage.vue'),
+        },
+        // {
+        //   path: '/order-confirmation/:orderId',
+        //   name: 'OrderConfirmation',
+        //   component: () => import('@/views/customer/pages/OrderConfirmation.vue'),
+        // },
+      ],
+    },
+
+    // Customer Empthy Layout
+    {
+      path: '/',
+      component: () => import('@/layouts/customer/EmptyLayout.vue'),
+      children: [
         {
           path: '/order-confirmation/:orderId',
           name: 'OrderConfirmation',
@@ -70,7 +97,7 @@ const router = createRouter({
     // Customer Auth Routes
     {
       path: '/',
-      component: () => import('@/layouts/AdminLayout.vue'),
+      component: () => import('@/layouts/customer/AuthLayout.vue'),
       children: [
         {
           path: '/login',

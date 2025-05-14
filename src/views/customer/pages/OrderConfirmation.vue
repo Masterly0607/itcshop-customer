@@ -35,8 +35,10 @@
 
     <!-- CTA Buttons -->
     <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-      <router-link to="/" class="btn btn-outline">Continue Shopping</router-link>
-      <router-link to="/orders" class="btn btn-primary text-white">View My Orders</router-link>
+      <router-link :to="{ name: 'Shop' }" class="btn btn-outline">Continue Shopping</router-link>
+      <router-link :to="{ name: 'OrderHistory' }" class="btn btn-primary text-white"
+        >View My Orders</router-link
+      >
     </div>
   </section>
 </template>

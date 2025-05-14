@@ -1,6 +1,15 @@
 <template>
   <div class="card bg-base-200 w-64 shadow-sm hover:shadow-md transition-all duration-300">
-    <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }">
+    <router-link
+      :to="{
+        name: 'ProductDetail',
+        params: { id: product.id },
+        query: {
+          category: product.category,
+          name: product.name,
+        },
+      }"
+    >
       <figure>
         <img
           :src="product.img || defaultImage"

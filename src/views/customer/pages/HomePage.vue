@@ -30,7 +30,13 @@
     </section>
 
     <!-- Flash Sale -->
-    <section class="container-default mt-20">
+    <section
+      class="container-default mt-20"
+      data-aos="fade-up"
+      data-aos-delay="200"
+      data-aos-duration="800"
+    >
+      <!--  data-aos-delay="200" =  wait 200 milliseconds before starting the animation. -->
       <SectionHeader title="Today's" />
 
       <div class="flex flex-wrap justify-between items-center gap-5">
@@ -144,7 +150,12 @@
     </section>
 
     <!-- Browse by Category-->
-    <section class="container-default mt-20">
+    <section
+      class="container-default mt-20"
+      data-aos="zoom-in-up"
+      data-aos-delay="300"
+      data-aos-duration="900"
+    >
       <SectionHeader title="Categories" />
 
       <div class="flex justify-between">
@@ -221,7 +232,12 @@
     </section>
 
     <!-- Best Selling Products -->
-    <section class="container-default mt-20">
+    <section
+      class="container-default mt-20"
+      data-aos="fade-up-right"
+      data-aos-delay="400"
+      data-aos-duration="1000"
+    >
       <SectionHeader title="This Month" />
 
       <div class="flex justify-between items-center">
@@ -237,7 +253,12 @@
     </section>
 
     <!-- New Arrival -->
-    <section class="container-default mt-20">
+    <section
+      class="container-default mt-20"
+      data-aos="flip-up"
+      data-aos-delay="500"
+      data-aos-duration="1000"
+    >
       <SectionHeader title="Featured" />
       <span class="section-title">New Arrival</span>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 h-[500px] mt-10">
@@ -248,9 +269,9 @@
             srcset=""
             class="absolute inset-0 w-full h-full object-cover"
           />
-          <div class="absolute bottom-5 left-10 text-white">
+          <div class="absolute bottom-5 left-10">
             <div class="text-xl font-bold">Lorem, ipsum dolor.</div>
-            <div class="text-">
+            <div class="text-sm">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur, quisquam!
             </div>
 
@@ -273,7 +294,7 @@
               />
               <div class="absolute bottom-5 left-10 text-white">
                 <div class="text-xl font-bold">Lorem, ipsum dolor.</div>
-                <div class="text-">
+                <div class="text-sm">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur, quisquam!
                 </div>
 
@@ -294,7 +315,7 @@
                 />
                 <div class="absolute bottom-5 left-10 text-white">
                   <div class="text-xl font-bold">Lorem, ipsum dolor.</div>
-                  <div class="text-">
+                  <div class="text-sm">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur, quisquam!
                   </div>
 
@@ -332,7 +353,12 @@
     </section>
 
     <!-- Explore Our Products -->
-    <section class="container-default mt-20">
+    <section
+      class="container-default mt-20"
+      data-aos="zoom-out-up"
+      data-aos-delay="600"
+      data-aos-duration="1200"
+    >
       <SectionHeader title="Our Products" />
       <span class="text-2xl md:text-3xl lg:text-4xl font-semibold">Explore Our Products</span>
 
@@ -507,6 +533,14 @@ const router = useRouter()
 const goToCategory = (category) => {
   router.push({ name: 'Shop', query: { category: category.label } })
 }
+
+// Add animation when scrolling using aos library
+import AOS from 'aos'
+import 'aos/dist/aos.css'
+
+onMounted(() => {
+  AOS.init({})
+})
 </script>
 
 <style>

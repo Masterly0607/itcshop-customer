@@ -1,6 +1,6 @@
 <template>
   <section class="container-default">
-    <div class="font-medium text-primary text-2xl mb-10">About Us</div>
+    <div class="page-title">About Us</div>
 
     <!-- Our Story -->
     <div class="flex gap-10 items-center">

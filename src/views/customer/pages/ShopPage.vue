@@ -1,6 +1,6 @@
 <template>
   <section class="container-default">
-    <div class="text-center font-bold text-2xl mb-5">SHOP</div>
+    <div class="text-center my-10 font-bold text-xl">SHOP</div>
     <div class="text-xl font-bold mb-4 text-primary">
       {{ route.query.category }}
     </div>

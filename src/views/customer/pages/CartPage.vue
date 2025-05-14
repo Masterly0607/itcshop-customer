@@ -1,6 +1,8 @@
 <template>
   <section class="container-default">
-    <div class="text-xl font-semibold text-primary mb-10">Cart</div>
+    <div class="page-title">
+      Cart <span class="text-sm">({{ cartStore.cartCount }})</span>
+    </div>
 
     <div v-if="cartStore.cartItems.length > 0" class="w-full space-y-4">
       <!-- Header -->

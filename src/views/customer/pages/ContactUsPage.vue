@@ -1,6 +1,6 @@
 <template>
-  <section>
-    <div class="text-center text-primary text-2xl font-bold mb-10">Contact Us</div>
+  <section class="container-default">
+    <div class="page-title">Contact Us</div>
     <div class="flex gap-10">
       <div class="w-1/3 p-5 shadow-gray-300 shadow-lg bg-gray-50">
         <div class="flex items-center gap-3">
@@ -56,11 +56,11 @@
           <input type="phone" placeholder="Type Your Phone" class="input border-none bg-gray-200" />
         </div>
         <textarea
-          class="resize rounded-md bg-gray-200 w-full mt-5 h-1/2 p-3"
+          class="resize rounded-md bg-gray-200 w-full mt-5 h-1/2 p-3 focus:ring-2 focus:ring-black outline-none"
           placeholder="Your Message"
         ></textarea>
         <div class="flex justify-end">
-          <button class="btn btn-primary px-10 py-5 text-white font-light mt-5">Send</button>
+          <div class="btn btn-primary px-10 py-5 text-white font-light mt-5">Send</div>
         </div>
       </div>
     </div>

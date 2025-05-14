@@ -1,16 +1,22 @@
 <template>
-  <section>
+  <section class="container-default">
     <!-- Product Detail -->
+
     <div>
+      <div class="my-10 text-xl text-primary">
+        {{ productCategory }} /
+        <span class="text-xl text-primary font-semibold">{{ productName }}</span>
+      </div>
+
       <div v-if="product">
         <div class="flex gap-10">
           <!-- Img box -->
-          <div class="w-1/2">
+          <div class="w-[70%]">
             <div class="flex gap-5 h-full">
               <!-- Thumbnails -->
               <div class="w-1/4 flex flex-col gap-2 h-full">
                 <img
-                  v-for="(thumb, index) in thumbnails"
+                  v-for="(thumb, index) in product.images"
                   :key="index"
                   :src="thumb"
                   class="flex-1 object-cover cursor-pointer border h-0 w-full"
@@ -26,8 +32,8 @@
             </div>
           </div>
 
-          <div class="w-1/2">
-            <div class="font-bold">Havic HV G-92 Gamepad</div>
+          <div class="w-[30%]">
+            <div class="font-bold">{{ productName }}</div>
             <div class="flex mt-2 items-center gap-3">
               <div class="rating rating-xs">
                 <div class="mask mask-star bg-primary" aria-label="1 star"></div>
@@ -41,14 +47,15 @@
                 <div class="mask mask-star" aria-label="5 star"></div>
               </div>
               <div class="text-xs">
-                (150 Reviews) | <span class="text-green-600">In Stock</span>
+                ({{ productRating }} Reviews) |
+                <span :class="productStock > 0 ? 'text-green-600' : 'text-red-500'">
+                  {{ productStock > 0 ? 'In Stock' : 'Out of Stock' }}
+                </span>
               </div>
             </div>
-            <div class="text-lg mt-3">$192.00</div>
+            <div class="text-lg mt-3">${{ productPrice }}</div>
             <div class="text-xs text-gray-600 mt-3">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis velit repellendus
-              incidunt enim consectetur ab tempore laudantium voluptate laborum. Animi pariatur
-              quasi tenetur voluptatibus aliquam dicta reiciendis ad libero mollitia.
+              {{ productDescription }}
             </div>
             <div class="divider"></div>
             <div class="flex gap-5">
@@ -91,9 +98,9 @@
             <div class="flex mt-5 gap-3">
               <div class="flex items-center border rounded overflow-hidden w-32 border-gray-300">
                 <!-- Minus Button -->
-                <button @click="decrease" class="w-1/3 h-10 text-xl border-r hover:bg-gray-100">
+                <div @click="decrease" class="w-1/3 h-10 text-xl border-r btn rounded-none">
                   &minus;
-                </button>
+                </div>
 
                 <!-- Quantity Display -->
                 <div class="w-1/3 h-10 flex items-center justify-center text-xl">
@@ -101,12 +108,12 @@
                 </div>
 
                 <!-- Plus Button -->
-                <button
+                <div
                   @click="increase"
-                  class="w-1/3 h-10 bg-yellow-400 text-white text-xl hover:bg-yellow-500"
+                  class="w-1/3 h-10 btn btn-primary text-white text-xl rounded-none"
                 >
                   +
-                </button>
+                </div>
               </div>
               <div class="btn btn-primary px-10 text-white font-light">Buy Now</div>
 
@@ -212,7 +219,15 @@ import { useProductsStore } from '/src/stores/productsStore.js'
 
 const route = useRoute()
 const productsStore = useProductsStore()
-
+import { computed } from 'vue'
+// Now access everything through `product`
+const productName = computed(() => product?.name)
+const productCategory = computed(() => product?.category)
+const productDescription = computed(() => product?.details.description)
+const productStock = computed(() => product?.details?.stock ?? 0) // ?? = return 0 when product?.details?.stock is undefined or null.
+// ? = If product or details is missing (undefined or null), don’t crash, just return undefined.  A crash means your app stops running because of an error.
+const productRating = computed(() => product?.rating)
+const productPrice = computed(() => product?.price)
 const productId = parseInt(route.params.id)
 const product = productsStore.productsList.find((p) => p.id === productId)
 // find() is for finding one item. Ex: When you need to find one product by its ID.(Product detail)
@@ -220,7 +235,7 @@ const product = productsStore.productsList.find((p) => p.id === productId)
 import { ref } from 'vue'
 import CardComponent from '../components/common/CardComponent.vue'
 
-const selectedSize = ref('xs') // tracks selected option like 'xs'
+const selectedSize = ref('M') // tracks selected option like 'xs'
 
 const quantity = ref(1)
 
@@ -232,7 +247,5 @@ const increase = () => {
   quantity.value++
 }
 
-const thumbnails = ['/img/keyboard.png', '/img/image.png', '/img/people.jpg', '/img/1.avif']
-
-const selectedImg = ref(thumbnails[0])
+const selectedImg = ref(product.images?.[0] ?? product.img)
 </script>

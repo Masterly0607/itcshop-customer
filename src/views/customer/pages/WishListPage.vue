@@ -1,9 +1,6 @@
 <template>
   <section class="container-default">
-    <div
-      class="text-lg text-primary my-10 font-semibold"
-      style="font-family: 'Orbitron', sans-serif"
-    >
+    <div class="page-title">
       Wishlist <span class="text-sm">({{ wishlistStore.wishlistCount }})</span>
     </div>
 

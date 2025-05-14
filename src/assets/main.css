@@ -50,6 +50,10 @@
     @apply text-2xl md:text-3xl lg:text-4xl font-semibold;
     font-family: 'Orbitron', sans-serif;
   }
+  .page-title {
+    @apply text-lg text-primary my-10 font-bold;
+    font-family: 'Orbitron', sans-serif;
+  }
 }
 
 body {
