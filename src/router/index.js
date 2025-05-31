@@ -6,54 +6,54 @@ const router = createRouter({
     // Customer Routes
     {
       path: '/',
-      component: () => import('@/layouts/customer/DefaultLayout.vue'),
+      component: () => import('@/layouts/DefaultLayout.vue'),
       children: [
-        { path: '', name: 'Home', component: () => import('@/views/customer/pages/HomePage.vue') },
+        { path: '', name: 'Home', component: () => import('@/views/HomePage.vue') },
         {
           path: 'shop',
           name: 'Shop',
-          component: () => import('@/views/customer/pages/ShopPage.vue'),
+          component: () => import('@/views/ShopPage.vue'),
         },
         {
           path: 'product/:id',
           name: 'ProductDetail',
-          component: () => import('@/views/customer/pages/ProductDetailPage.vue'),
+          component: () => import('@/views/ProductDetailPage.vue'),
         },
         {
           path: '/products',
           name: 'ProductsByCategory',
-          component: () => import('@/views/customer/components/common/ProductsByCategoryPage.vue'),
+          component: () => import('@/components/core/ProductsByCategoryPage.vue'),
         },
         {
           path: 'cart',
           name: 'Cart',
-          component: () => import('@/views/customer/pages/CartPage.vue'),
+          component: () => import('@/views/CartPage.vue'),
         },
         {
           path: 'checkout',
           name: 'Checkout',
-          component: () => import('@/views/customer/pages/CheckOutPage.vue'),
+          component: () => import('@/views/CheckOutPage.vue'),
         },
         {
           path: 'order-history',
           name: 'OrderHistory',
-          component: () => import('@/views/customer/pages/OrderHistoryPage.vue'),
+          component: () => import('@/views/OrderHistoryPage.vue'),
         },
         {
           path: 'wishlist',
           name: 'WishList',
-          component: () => import('@/views/customer/pages/WishListPage.vue'),
+          component: () => import('@/views/WishListPage.vue'),
         },
 
         {
           path: 'about-us',
           name: 'AboutUs',
-          component: () => import('@/views/customer/pages/AboutUsPage.vue'),
+          component: () => import('@/views/AboutUsPage.vue'),
         },
         {
           path: 'contact-us',
           name: 'ContactUs',
-          component: () => import('@/views/customer/pages/ContactUsPage.vue'),
+          component: () => import('@/views/ContactUsPage.vue'),
         },
       ],
     },
@@ -61,112 +61,73 @@ const router = createRouter({
     // Customer Account Routes
     {
       path: '/account',
-      component: () => import('@/layouts/customer/DashboardLayout.vue'),
+      component: () => import('@/layouts/DashboardLayout.vue'),
       children: [
         {
           path: '',
           name: 'AccountDashboard',
-          component: () => import('@/views/customer/pages/AccountDashboardPage.vue'),
+          component: () => import('@/views/AccountDashboardPage.vue'),
         },
         {
           path: 'order-history',
           name: 'OrderHistory',
-          component: () => import('@/views/customer/pages/OrderHistoryPage.vue'),
+          component: () => import('@/views/OrderHistoryPage.vue'),
         },
-        // {
-        //   path: '/order-confirmation/:orderId',
-        //   name: 'OrderConfirmation',
-        //   component: () => import('@/views/customer/pages/OrderConfirmation.vue'),
-        // },
       ],
     },
 
     // Customer Empthy Layout
-    {
-      path: '/',
-      component: () => import('@/layouts/customer/EmptyLayout.vue'),
-      children: [
-        {
-          path: '/order-confirmation/:orderId',
-          name: 'OrderConfirmation',
-          component: () => import('@/views/customer/pages/OrderConfirmation.vue'),
-        },
-      ],
-    },
+    // {
+    //   path: '/',
+    //   component: () => import('@/layouts/EmptyLayout.vue'),
+    //   children: [
+    //     {
+    //       path: 'order-confirmation/:orderId',
+    //       name: 'OrderConfirmation',
+    //       component: () => import('@/views/OrderConfirmation.vue'),
+    //     },
+    //   ],
+    // },
 
     // Customer Auth Routes
     {
       path: '/',
-      component: () => import('@/layouts/customer/AuthLayout.vue'),
+      component: () => import('@/layouts/AuthLayout.vue'),
       children: [
         {
           path: '/login',
           name: 'Login',
-          component: () => import('@/views/customer/pages/auth/LoginPage.vue'),
+          component: () => import('@/views/auth/LoginPage.vue'),
         },
         {
           path: '/signup',
           name: 'Signup',
-          component: () => import('@/views/customer/pages/auth/SignUpPage.vue'),
+          component: () => import('@/views/auth/SignUpPage.vue'),
         },
         {
           path: '/forgot-password',
           name: 'ForgotPassword',
-          component: () => import('@/views/customer/pages/auth/ForgotPasswordPage.vue'),
+          component: () => import('@/views/auth/ForgotPasswordPage.vue'),
         },
         {
           path: '/reset-password',
           name: 'ResetPassword',
-          component: () => import('@/views/customer/pages/auth/ResetPasswordPage.vue'),
+          component: () => import('@/views/auth/ResetPasswordPage.vue'),
         },
         {
           path: '/verify-email',
           name: 'VerifyEmail',
-          component: () => import('@/views/customer/pages/auth/VerifyEmailPage.vue'),
-        },
-      ],
-    },
-
-    //Admin Routes
-    {
-      path: '/admin',
-      component: () => import('@/layouts/AdminLayout.vue'),
-      children: [
-        {
-          path: '',
-          name: 'AdminDashboard',
-          component: () => import('@/views/admin/pages/AdminDashboardPage.vue'),
-        },
-        {
-          path: 'users',
-          name: 'AdminUsers',
-          component: () => import('@/views/admin/pages/AdminUsersPage.vue'),
-        },
-        {
-          path: 'products',
-          name: 'AdminProducts',
-          component: () => import('@/views/admin/pages/AdminProductsPage.vue'),
-        },
-        {
-          path: 'categories',
-          name: 'AdminCategories',
-          component: () => import('@/views/admin/pages/AdminCategoriesPage.vue'),
-        },
-        {
-          path: 'coupons',
-          name: 'AdminCoupons',
-          component: () => import('@/views/admin/pages/AdminCouponsPage.vue'),
-        },
-        {
-          path: 'settings',
-          name: 'AdminSettings',
-          component: () => import('@/views/admin/pages/AdminSettingsPage.vue'),
+          component: () => import('@/views/auth/VerifyEmailPage.vue'),
         },
       ],
     },
 
     // // NotFound Page
-    { path: '/:pathMatch(.*)*', name: 'NotFound', component: () => import('@/NotFoundPage.vue') },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: () => import('@/NotFoundPage.vue'),
+    },
   ],
 })
 

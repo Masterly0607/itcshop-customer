@@ -51,7 +51,7 @@
 import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useCategoriesStore } from '@/stores/categoriesStore'
-import ProductsByCategoryPage from '../components/common/ProductsByCategoryPage.vue'
+import ProductsByCategoryPage from '@/components/core/ProductsByCategoryPage.vue'
 
 const route = useRoute()
 const router = useRouter()

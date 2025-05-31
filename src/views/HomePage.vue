@@ -403,7 +403,7 @@
   </div>
 </template>
 <script setup>
-import CardComponent from '@/views/customer/components/common/CardComponent.vue'
+import CardComponent from '@/components/core/CardComponent.vue'
 import { ref, onMounted } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { EffectFade, Pagination, Autoplay, Navigation } from 'swiper/modules'
@@ -413,9 +413,9 @@ import 'swiper/css/navigation'
 import 'swiper/css/effect-fade'
 import { useProductsStore } from '/src/stores/productsStore.js'
 import { useRouter } from 'vue-router'
-import SectionHeader from '../components/common/SectionHeader.vue'
+import SectionHeader from '@/components/core/SectionHeader.vue'
 import { TruckIcon, LifebuoyIcon, ShieldCheckIcon } from '@heroicons/vue/24/outline'
-import CategoryComponent from '../components/common/CategoryComponent.vue'
+import CategoryComponent from '@/components/core/CategoryComponent.vue'
 import { useCategoriesStore } from '@/stores/categoriesStore'
 // Using products from pinia
 const productsStore = useProductsStore()

@@ -201,7 +201,7 @@
 
     <!-- Related Items -->
     <div class="mt-15">
-      <div class="text-primary font-medium text-xl mb-10">Related Item</div>
+      <SectionHeader title="Related Items"></SectionHeader>
       <div class="grid grid-cols-4 gap-4">
         <CardComponent
           v-for="product in productsStore.productsList"
@@ -234,6 +234,7 @@ const product = productsStore.productsList.find((p) => p.id === productId)
 // filter() is for finding multiple items. Ex:  you might have multiple products in the same category,
 import { ref } from 'vue'
 import CardComponent from '../components/common/CardComponent.vue'
+import SectionHeader from '../components/common/SectionHeader.vue'
 
 const selectedSize = ref('M') // tracks selected option like 'xs'
 

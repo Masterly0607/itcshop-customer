@@ -217,5 +217,8 @@ const goToCart = () => router.push({ name: 'Cart' })
 import { useWishlistStore } from '@/stores/wishlistStore'
 const wishlistStore = useWishlistStore()
 
-const isLoggedIn = false // Change to false to hide dropdown
+import { useAuthStore } from '@/stores/authStore'
+
+const authStore = useAuthStore()
+const { isLoggedIn, user, logout } = authStore
 </script>
