@@ -8,19 +8,16 @@
     <!-- Input -->
     <fieldset class="fieldset mt-8 w-full">
       <legend class="fieldset-legend">Email address</legend>
-      <input
-        type="email"
-        class="input w-full input-xl rounded-none focus:ring-2 focus:ring-primary focus:outline-none border border-gray-300"
-      />
+      <Form :validation-schema="formValidation">
+        <Field
+          type="email"
+          name="email"
+          class="input w-full input-xl rounded-none focus:ring-2 focus:ring-primary focus:outline-none border border-gray-300"
+        />
+        <ErrorMessage class="text-red-500 text-xs block mt-1" name="email"> </ErrorMessage>
+      </Form>
     </fieldset>
-    <button
-      class="btn btn-lg w-full mt-6 btn-primary text-white text-light"
-      :disabled="loading"
-      @click="isLoading"
-    >
-      <span class="loading loading-spinner loading-xs" v-if="loading"></span>
-      <span v-else>Send Reset Link</span>
-    </button>
+    <BaseButton label="Send Reset Link" :loading="loading" />
     <RouterLink :to="{ name: 'Login' }" class="mt-3">
       <span class="text-sm text-light text-primary">Back to Login</span>
     </RouterLink>
@@ -29,9 +26,11 @@
 
 <script setup>
 import { ref } from 'vue'
-
+import { Form, Field, ErrorMessage } from 'vee-validate' // Import VeeValidation Library for input validation
+import * as yup from 'yup' // Validation rule
+import BaseButton from '@/components/core/BaseButton.vue'
+const formValidation = yup.object({
+  email: yup.string().required().email(),
+})
 const loading = ref(false)
-const isLoading = () => {
-  loading.value = !loading.value
-}
 </script>

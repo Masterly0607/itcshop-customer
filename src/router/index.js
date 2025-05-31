@@ -119,6 +119,11 @@ const router = createRouter({
           name: 'VerifyEmail',
           component: () => import('@/views/auth/VerifyEmailPage.vue'),
         },
+        {
+          path: '/verify-email-success',
+          name: 'VerifyEmailSuccess',
+          component: () => import('@/views/auth/VerifyEmailSuccessPage.vue'),
+        },
       ],
     },
 

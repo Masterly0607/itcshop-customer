@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex">
     <!-- Sidebar -->
-    <aside class="w-64 bg-gray-900 text-white p-6">
+    <aside class="w-64 bg-yello-900 text-white p-6">
       <h2 class="text-2xl font-bold mb-6">My Account</h2>
       <nav class="flex flex-col gap-4">
         <RouterLink

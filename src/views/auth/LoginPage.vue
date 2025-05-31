@@ -1,116 +1,78 @@
 <template>
   <div
-    class="flex gap-10 items-center p-10 shadow-2xl rounded-lg bg-white max-w-3xl"
+    class="flex gap-10 p-10 shadow-2xl rounded-lg bg-white max-w-3xl items-stretch min-h-[400px]"
     :class="{ 'cursor-not-allowed': loading }"
   >
     <!-- Input box -->
-    <div class="w-1/2">
-      <div class="flex flex-col">
-        <div class="mb-8">
-          <div class="font-medium text-3xl mb-5 text-center">Log Into ITC SHOP</div>
+    <div class="w-1/2 flex flex-col justify-center h-full">
+      <div class="font-medium text-3xl mb-5 text-center">Log Into ITC SHOP</div>
 
-          <!-- Form -->
-          <form action="" class="flex flex-col gap-5 mt-5" @submit.prevent="handleLogin">
-            <div>
-              <input
-                type="text"
-                placeholder="Email or Phone Number"
-                class="input input-ghost w-full border-b-2 border-gray-300 border-0 rounded-none focus:ring-2 focus:ring-primary focus:outline-none"
-                v-model="email"
-              />
-              <p v-if="errors.email" class="text-red-500">{{ errors.email }}</p>
-            </div>
-
-            <div>
-              <input
-                type="password"
-                placeholder="Password"
-                class="input input-ghost border-b-2 border-gray-300 border-0 rounded-none w-full focus:ring-2 focus:ring-primary focus:outline-none"
-                required
-                v-model="password"
-              />
-              <p v-if="errors.password" class="text-red-500">{{ errors.password }}</p>
-            </div>
-
-            <!-- Button -->
-            <div class="flex justify-between items-center mt-10">
-              <button
-                class="btn btn-lg btn-primary text-white text-sm"
-                :disabled="loading"
-                @click="isLoading"
-              >
-                <span v-if="loading" class="loading loading-spinner loading-xs"></span>
-                <span>{{ loading ? '' : 'Login' }}</span>
-              </button>
-              <RouterLink :to="{ name: 'ForgotPassword' }">
-                <span class="text-primary">Forgot Password?</span>
-              </RouterLink>
-            </div>
-          </form>
+      <!-- Form -->
+      <Form
+        action=""
+        class="flex flex-col gap-5 mt-5"
+        @submit.prevent="handleLogin"
+        :validation-schema="formValidation"
+      >
+        <div>
+          <Field
+            name="email"
+            type="email"
+            placeholder="Email or Phone Number"
+            class="focus:ring-2 focus:ring-primary focus:outline-none input input-ghost border-b-2 border-gray-300 border-0 rounded-none w-full"
+          />
+          <ErrorMessage class="text-red-500 text-xs block mt-1" name="email"> </ErrorMessage>
         </div>
+
+        <div>
+          <Field
+            name="password"
+            type="password"
+            placeholder="Password"
+            class="focus:ring-2 focus:ring-primary focus:outline-none input input-ghost border-b-2 border-gray-300 border-0 rounded-none w-full"
+          />
+          <ErrorMessage class="text-red-500 text-xs block mt-1" name="password"> </ErrorMessage>
+        </div>
+      </Form>
+      <!-- Button -->
+      <div class="mt-7">
+        <BaseButton label="Login" :loading="loading" @click="handleLogin" class="mb-1" />
+        <RouterLink :to="{ name: 'ForgotPassword' }">
+          <span class="text-primary text-xs underline">Forgot Password?</span>
+        </RouterLink>
       </div>
     </div>
 
     <!-- Img box -->
-    <div class="bg-red-300 w-1/2">
-      <img src="/img/login.jpg" alt="adasd" class="h-full w-full object-cover" />
+    <div class="w-1/2 h-full">
+      <img src="/img/login.jpg" alt="Login Illustration" class="h-full w-full object-cover" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import axios from 'axios'
-import { validateName, validateEmail, validatePassword } from '@/validation/fields'
-
-// Form fields
-const email = ref('')
-const password = ref('')
-
-// Loading + error state
+import { Form, Field, ErrorMessage } from 'vee-validate' // Import VeeValidation Library for input validation
+import * as yup from 'yup' // Validation rule
+import BaseButton from '@/components/core/BaseButton.vue'
 const loading = ref(false)
-const errors = ref({
-  email: '',
-  password: '',
+const formValidation = yup.object({
+  email: yup.string().required().email(),
+  password: yup.string().required().min(8),
 })
 
-// Real-time validation
-watch(email, (value) => {
-  errors.value.email = validateEmail(value)
-})
-watch(password, (value) => {
-  errors.value.password = validatePassword(value)
-})
-
-const handleLogin = async () => {
-  // Validate input
-  errors.value.name = validateName(name.value)
-  errors.value.email = validateEmail(email.value)
-  errors.value.password = validatePassword(password.value)
-
-  //  hasError(Gate for backend): blocks form from going to the API if any error still exists
-  // Object.values = get all values in object and return in array(get only value not key)
-  // some(): is js function check if at least one item in arrary is true.
-  const hasError = Object.values(errors.value).some((err) => err)
-  if (hasError) return
-
+const handleLogin = async (values) => {
   loading.value = true
   try {
-    const res = await axios.post('http://127.0.0.1:8000/api/login', {
-      email: email.value,
-      password: password.value,
+    const res = await axios.post('http://127.0.0.1:8000/api/register', {
+      email: values.email,
+      password: values.password,
     })
-
-    // login success
-    // authStore.login(res.data.user, res.data.token)
-    // router.push({ name: 'Home' })
+    console.log(' Logined:', res.data)
   } catch (err) {
-    // 💥 Handle backend error here
-    if (err.response && err.response.status === 401) {
-      errors.value.email = 'Invalid email or password'
-    } else {
-      alert('Something went wrong. Please try again.')
-    }
+    console.error(err)
+    alert('Login failed')
   } finally {
     loading.value = false
   }
