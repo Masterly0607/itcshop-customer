@@ -7,13 +7,15 @@
       <div class="w-1/2">
         <div class="mb-7 font-medium text-3xl">Our Story</div>
         <div class="text-xs">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus beatae eaque natus
-          autem, mollitia nihil itaque officia temporibus eligendi doloribus obcaecati possimus ea
-          earum, unde est ipsum veritatis eum voluptatibus. Lorem ipsum dolor sit amet, consectetur
-          <div class="mt-3"></div>
-          adipisicing elit. Nam quisquam, aperiam beatae recusandae esse, sint necessitatibus,
-          voluptatem iure consequuntur laborum aut aliquam sunt ducimus! Voluptatem enim animi alias
-          eius? Nobis.
+          Welcome to ITCShop – your trusted online shopping destination created by passionate
+          software engineering students from the Institute of Technology of Cambodia. At ITCShop, we
+          believe in making shopping easy, fast, and accessible. Whether you're looking for the
+          latest gadgets, trendy fashion, or essential home items, our platform is designed to offer
+          a smooth and secure shopping experience. Our system features: - User-friendly interface
+          with smart search and filtering - Secure checkout and order tracking - Admin dashboard for
+          managing products and orders We’re committed to building a reliable, local e-commerce
+          platform that serves customers with quality and convenience. Thank you for supporting our
+          journey. Your satisfaction is our success!
         </div>
       </div>
       <div class="w-1/2 bg-red-300 h-full">
@@ -112,12 +114,12 @@
     <div class="mt-20">
       <div class="flex gap-4">
         <div class="flex flex-col h-80 w-1/4">
-          <div class="h-[80%]">
-            <img src="/img/person.jpg" alt="" srcset="" class="w-full h-full object-contain" />
+          <div class="h-[80%] bg-gray-200">
+            <img src="/img/person1.png" alt="" srcset="" class="w-full h-full object-contain" />
           </div>
           <div class="h-[20%] flex flex-col gap-1">
             <div class="mt-3 font-medium text-xl">Sok Masterly</div>
-            <div class="text-xs">Founder & Chairman</div>
+            <div class="text-xs">Full-stack Developer</div>
             <div class="flex gap-2">
               <div class="btn btn-ghost btn-circle btn-xs">
                 <span>
@@ -155,12 +157,12 @@
           </div>
         </div>
         <div class="flex flex-col h-80 w-1/4">
-          <div class="h-[80%]">
-            <img src="/img/person.jpg" alt="" srcset="" class="w-full h-full object-contain" />
+          <div class="h-[80%] bg-gray-200">
+            <img src="/img/person2.png" alt="" srcset="" class="w-full h-full object-contain" />
           </div>
           <div class="h-[20%] flex flex-col gap-1">
-            <div class="mt-3 font-medium text-xl">Sok Masterly</div>
-            <div class="text-xs">Founder & Chairman</div>
+            <div class="mt-3 font-medium text-xl">Tann Kangson</div>
+            <div class="text-xs">Backend Developer</div>
             <div class="flex gap-2">
               <div class="btn btn-ghost btn-circle btn-xs">
                 <span>
@@ -198,12 +200,12 @@
           </div>
         </div>
         <div class="flex flex-col h-80 w-1/4">
-          <div class="h-[80%]">
-            <img src="/img/person.jpg" alt="" srcset="" class="w-full h-full object-contain" />
+          <div class="h-[80%] bg-gray-200">
+            <img src="/img/person3.png" alt="" srcset="" class="w-full h-full object-contain" />
           </div>
           <div class="h-[20%] flex flex-col gap-1">
-            <div class="mt-3 font-medium text-xl">Sok Masterly</div>
-            <div class="text-xs">Founder & Chairman</div>
+            <div class="mt-3 font-medium text-xl">Sreang Rachana</div>
+            <div class="text-xs">Co-Founder & UX Designer</div>
             <div class="flex gap-2">
               <div class="btn btn-ghost btn-circle btn-xs">
                 <span>
@@ -241,12 +243,12 @@
           </div>
         </div>
         <div class="flex flex-col h-80 w-1/4">
-          <div class="h-[80%]">
-            <img src="/img/person.jpg" alt="" srcset="" class="w-full h-full object-contain" />
+          <div class="h-[80%] bg-gray-200">
+            <img src="/img/person4.png" alt="" srcset="" class="w-full h-full object-contain" />
           </div>
           <div class="h-[20%] flex flex-col gap-1">
-            <div class="mt-3 font-medium text-xl">Sok Masterly</div>
-            <div class="text-xs">Founder & Chairman</div>
+            <div class="mt-3 font-medium text-xl">Sroas Thavrith</div>
+            <div class="text-xs">Frontend Developer</div>
             <div class="flex gap-2">
               <div class="btn btn-ghost btn-circle btn-xs">
                 <span>

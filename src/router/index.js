@@ -55,6 +55,11 @@ const router = createRouter({
           name: 'ContactUs',
           component: () => import('@/views/ContactUsPage.vue'),
         },
+        {
+          path: 'order-history',
+          name: 'OrderHistory',
+          component: () => import('@/views/OrderHistoryPage.vue'),
+        },
       ],
     },
 
@@ -68,26 +73,21 @@ const router = createRouter({
           name: 'AccountDashboard',
           component: () => import('@/views/AccountDashboardPage.vue'),
         },
-        {
-          path: 'order-history',
-          name: 'OrderHistory',
-          component: () => import('@/views/OrderHistoryPage.vue'),
-        },
       ],
     },
 
     // Customer Empthy Layout
-    // {
-    //   path: '/',
-    //   component: () => import('@/layouts/EmptyLayout.vue'),
-    //   children: [
-    //     {
-    //       path: 'order-confirmation/:orderId',
-    //       name: 'OrderConfirmation',
-    //       component: () => import('@/views/OrderConfirmation.vue'),
-    //     },
-    //   ],
-    // },
+    {
+      path: '/',
+      component: () => import('@/layouts/EmptyLayout.vue'),
+      children: [
+        {
+          path: 'order-confirmation/:orderId',
+          name: 'OrderConfirmation',
+          component: () => import('@/views/OrderConfirmation.vue'),
+        },
+      ],
+    },
 
     // Customer Auth Routes
     {

@@ -15,13 +15,13 @@
             maxlength="1"
             @keyup="handleKeyup(index)"
             @paste="handlePaste"
-            class="block w-13 h-13 py-3 text-sm font-extrabold text-center text-gray-900 bg-white border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+            class="block w-13 h-13 py-3 text-sm font-extrabold text-center text-gray-900 bg-white border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
             required
           />
         </div>
       </div>
     </form>
-    <div class="btn w-full py-4 btn-primary text-white mt-3 text-center">Verify</div>
+    <BaseButton label="Verify" :loading="loading" />
     <div class="text-center text-xs mt-3">
       Didn't receive code?
       <span class="ml-1 text-xs text-primary underline cursor-pointer">Resend</span>
@@ -30,8 +30,9 @@
 </template>
 
 <script setup>
+import BaseButton from '@/components/core/BaseButton.vue'
 import { ref } from 'vue'
-
+const loading = ref(true)
 const codes = ref(['', '', '', '', '', ''])
 const otpInputs = []
 

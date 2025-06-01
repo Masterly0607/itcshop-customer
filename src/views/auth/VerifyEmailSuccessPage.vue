@@ -19,12 +19,14 @@
       </p>
 
       <RouterLink :to="{ name: 'Login' }">
-        <button class="btn btn-primary w-full text-white">Go to Login</button>
+        <BaseButton label="Go to Login" :loading="loading" />
       </RouterLink>
     </div>
   </div>
 </template>
 
 <script setup>
-// No JS needed
+import BaseButton from '@/components/core/BaseButton.vue'
+import { ref } from 'vue'
+const loading = ref(false)
 </script>

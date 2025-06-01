@@ -17,6 +17,6 @@
 </template>
 
 <script setup>
-import CustomerFooter from '@/components/NavbarComponent.vue'
-import CustomerNavBar from '@/components/CustomerNavBar.vue'
+import CustomerFooter from '@/components/FooterComponent.vue'
+import CustomerNavBar from '@/components/NavbarComponent.vue'
 </script>

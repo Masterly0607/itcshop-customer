@@ -233,8 +233,8 @@ const product = productsStore.productsList.find((p) => p.id === productId)
 // find() is for finding one item. Ex: When you need to find one product by its ID.(Product detail)
 // filter() is for finding multiple items. Ex:  you might have multiple products in the same category,
 import { ref } from 'vue'
-import CardComponent from '../components/common/CardComponent.vue'
-import SectionHeader from '../components/common/SectionHeader.vue'
+import CardComponent from '@/components/core/CardComponent.vue'
+import SectionHeader from '@/components/core/SectionHeader.vue'
 
 const selectedSize = ref('M') // tracks selected option like 'xs'
 

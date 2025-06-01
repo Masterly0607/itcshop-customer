@@ -1,12 +1,5 @@
 <template>
-  <!-- Spinner overlay (only visible while placing order) -->
-  <!-- Spinner Overlay with Blur Background -->
-  <div
-    v-if="isPlacingOrder"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-white/60"
-  >
-    <span class="loading loading-spinner loading-lg text-primary"></span>
-  </div>
+  <SpinnerComponent :show="isPlacingOrder" size="lg" type="loading-bars" />
 
   <section class="container-default">
     <div class="page-title">CheckOut</div>
@@ -216,6 +209,7 @@
   </section>
 </template>
 <script setup>
+import SpinnerComponent from '@/components/core/SpinnerComponent.vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 const payment = ref('')
