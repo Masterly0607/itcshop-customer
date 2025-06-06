@@ -1,29 +1,39 @@
-# front-end
+# ITCShop - Full-Stack E-commerce Web App
 
-This template should help get you started developing with Vue 3 in Vite.
+**ITCShop** is a full-stack e-commerce web application developed as a final project in the Software Engineering program at the **Institute of Technology of Cambodia (ITC)**. It includes separate modules for the customer-facing frontend, admin dashboard, and backend API.
 
-## Recommended IDE Setup
+---
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## 🛒 Customer Frontend
 
-## Customize configuration
+This is the customer-facing web app built with **Vue 3**, designed for users to browse and purchase products.
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+### 🔥 Features
 
-## Project Setup
+- Product listing, filtering, and search  
+- Cart, wishlist, and checkout flow  
+- Customer profile and order history  
+- Login, registration, and secure routes  
+- Responsive UI with Tailwind CSS  
+- Integrated with Laravel backend API
 
-```sh
+### 🔧 Tech Stack
+
+- Vue 3 + Composition API  
+- Pinia (state management)  
+- Vue Router  
+- Axios  
+- Tailwind CSS  
+- Vite (build tool)
+- Hosting(Netify)
+
+### 🚀 Setup
+
+```bash
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
-```
 
-### Compile and Minify for Production
 
-```sh
-npm run build
-```
+
+
+
