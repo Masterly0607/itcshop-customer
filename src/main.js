@@ -49,7 +49,7 @@ library.add(
 const app = createApp(App)
 app.component('font-awesome-icon', FontAwesomeIcon)
 
-app.use(Toastify, { autoClose: 5000, position: 'top-left' })
+app.use(Toastify, { autoClose: 3000, position: 'top-left' })
 app.use(createPinia())
 app.use(router)
 app.mount('#app')

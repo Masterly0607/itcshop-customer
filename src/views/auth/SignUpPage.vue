@@ -121,6 +121,7 @@ import * as yup from 'yup' // Validation rule
 import BaseButton from '@/components/core/BaseButton.vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'vue-router'
+import { toast } from 'vue3-toastify'
 
 const router = useRouter()
 
@@ -153,7 +154,7 @@ const handleSignUp = async (values) => {
     router.push({ name: 'VerifyEmail' })
   } catch (err) {
     console.log(err)
-    alert(err?.response?.data?.message || 'Registration failed')
+    toast.error(err?.response?.data?.message || 'Registration failed')
   } finally {
     loading.value = false
   }

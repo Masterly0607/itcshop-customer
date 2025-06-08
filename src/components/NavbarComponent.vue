@@ -136,36 +136,35 @@
           </div>
 
           <!-- SignUp button -->
-          <div class="flex-none">
-            <ul class="menu menu-horizontal px-1">
-              <li v-if="authStore.isLoggedIn">
-                <details class="dropdown dropdown-end">
-                  <summary class="btn btn-ghost btn-circle avatar">
-                    <div class="w-10 rounded-full">
-                      <img
-                        :src="authStore.customer?.avatar || 'https://i.pravatar.cc/100?u=customer'"
-                      />
-                    </div>
-                  </summary>
-                  <ul
-                    class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow"
-                  >
-                    <li>
-                      <RouterLink :to="{ name: 'AccountDashboard' }">My Account</RouterLink>
-                    </li>
-                    <li>
-                      <RouterLink :to="{ name: 'OrderHistory' }">My Orders</RouterLink>
-                    </li>
-                    <li>
-                      <a @click="logout">Log Out</a>
-                    </li>
-                  </ul>
-                </details>
+          <div class="dropdown dropdown-end" v-if="authStore.isLoggedIn">
+            <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+              <div class="w-10 rounded-full">
+                <img
+                  alt="Tailwind CSS Navbar component"
+                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                />
+              </div>
+            </div>
+            <ul
+              tabindex="0"
+              class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+            >
+              <li>
+                <RouterLink class="justify-between" :to="{ name: 'AccountDashboard' }">
+                  Profile
+                </RouterLink>
               </li>
-              <li v-else>
-                <RouterLink :to="{ name: 'Signup' }" class="btn bg-gray-200">Sign Up</RouterLink>
-              </li>
+              <li><RouterLink :to="{ name: 'OrderHistory' }">My Order</RouterLink></li>
+              <li><a @click="logout">Logout</a></li>
             </ul>
+          </div>
+          <div v-else class="flex items-center ml-2">
+            <RouterLink
+              :to="{ name: 'Signup' }"
+              class="btn btn-sm bg-gray-200 text-sm hover:bg-primary hover:text-white"
+            >
+              Sign Up
+            </RouterLink>
           </div>
         </div>
         <!-- Mobile Menu -->
@@ -224,8 +223,8 @@ const wishlistStore = useWishlistStore()
 import { useAuthStore } from '@/stores/authStore'
 const authStore = useAuthStore()
 
-const logout = async () => {
-  await authStore.logout()
+const logout = () => {
+  authStore.logout()
   router.push({ name: 'Home' })
 }
 </script>

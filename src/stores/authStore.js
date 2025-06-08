@@ -66,15 +66,50 @@ export const useAuthStore = defineStore('auth', {
       router.push({ name: 'Login' })
     },
 
-    fetchUser() {
+    async getUser() {
       this.loading = true
-      const savedUser = sessionStorage.getItem('CUSTOMER')
-      if (savedUser) {
-        this.customer = JSON.parse(savedUser)
-      } else {
+      try {
+        const response = await axiosClient.get('/customer/profile') // or /me
+        this.customer = response.data.customer
+        sessionStorage.setItem('CUSTOMER', JSON.stringify(this.customer))
+      } catch (error) {
         this.customer = null
+        this.token = null
+        sessionStorage.removeItem('CUSTOMER')
+        sessionStorage.removeItem('TOKEN')
+        router.push({ name: 'Login' }) // redirect if session expired
+      } finally {
+        this.loading = false
       }
-      this.loading = false
+    },
+
+    // Update user information
+    async updateUser(payload) {
+      this.loading = true
+      try {
+        const response = await axiosClient.put('/customer/profile', payload)
+        this.customer = response.data.customer // Update local customer info
+        sessionStorage.setItem('CUSTOMER', JSON.stringify(this.customer)) // Sync to sessionStorage
+      } catch (error) {
+        console.error('Update failed', error)
+        throw error
+      } finally {
+        this.loading = false
+      }
+    },
+
+    // Change password
+    async changePassword(payload) {
+      this.loading = true
+      try {
+        const response = await axiosClient.put('/customer/change-password', payload)
+        return response.data
+      } catch (error) {
+        console.error('Update failed', error)
+        throw error
+      } finally {
+        this.loading = false
+      }
     },
   },
 })

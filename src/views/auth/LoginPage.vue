@@ -11,7 +11,7 @@
       <Form
         action=""
         class="flex flex-col gap-5 mt-5"
-        @submit.prevent="handleLogin"
+        @submit="handleLogin"
         :validation-schema="formValidation"
       >
         <div>
@@ -33,12 +33,18 @@
           />
           <ErrorMessage class="text-red-500 text-xs block mt-1" name="password"> </ErrorMessage>
         </div>
+        <BaseButton label="Login" :loading="loading" type="submit" />
       </Form>
       <!-- Button -->
-      <div class="mt-7">
-        <BaseButton label="Login" :loading="loading" @click="handleLogin" class="mb-1" />
+      <div class="flex justify-between">
         <RouterLink :to="{ name: 'ForgotPassword' }">
           <span class="text-primary text-xs underline">Forgot Password?</span>
+        </RouterLink>
+      </div>
+      <div class="mt-5 text-xs">
+        Don't have an account?
+        <RouterLink :to="{ name: 'Signup' }" class="text-primary underline ml-1">
+          Sign Up
         </RouterLink>
       </div>
     </div>
@@ -52,10 +58,12 @@
 
 <script setup>
 import { ref } from 'vue'
-import axios from 'axios'
 import { Form, Field, ErrorMessage } from 'vee-validate' // Import VeeValidation Library for input validation
 import * as yup from 'yup' // Validation rule
 import BaseButton from '@/components/core/BaseButton.vue'
+import { useAuthStore } from '@/stores/authStore'
+import { toast } from 'vue3-toastify'
+const authStore = useAuthStore()
 const loading = ref(false)
 const formValidation = yup.object({
   email: yup.string().required().email(),
@@ -65,14 +73,13 @@ const formValidation = yup.object({
 const handleLogin = async (values) => {
   loading.value = true
   try {
-    const res = await axios.post('http://127.0.0.1:8000/api/register', {
-      email: values.email,
-      password: values.password,
-    })
-    console.log(' Logined:', res.data)
+    await authStore.login(values.email, values.password)
+    toast.success('Login successful')
   } catch (err) {
     console.error(err)
-    alert('Login failed')
+
+    const message = err?.response?.data?.message || 'Login failed. Please try again.'
+    toast.error(message)
   } finally {
     loading.value = false
   }
