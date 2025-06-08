@@ -138,38 +138,32 @@
           <!-- SignUp button -->
           <div class="flex-none">
             <ul class="menu menu-horizontal px-1">
-              <li v-if="isLoggedIn">
-                <RouterLink :to="{ name: 'Signup' }" class="btn bg-gray-200">Sign Up</RouterLink>
+              <li v-if="authStore.isLoggedIn">
+                <details class="dropdown dropdown-end">
+                  <summary class="btn btn-ghost btn-circle avatar">
+                    <div class="w-10 rounded-full">
+                      <img
+                        :src="authStore.customer?.avatar || 'https://i.pravatar.cc/100?u=customer'"
+                      />
+                    </div>
+                  </summary>
+                  <ul
+                    class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow"
+                  >
+                    <li>
+                      <RouterLink :to="{ name: 'AccountDashboard' }">My Account</RouterLink>
+                    </li>
+                    <li>
+                      <RouterLink :to="{ name: 'OrderHistory' }">My Orders</RouterLink>
+                    </li>
+                    <li>
+                      <a @click="logout">Log Out</a>
+                    </li>
+                  </ul>
+                </details>
               </li>
-              <li v-else class="dropdown dropdown-end">
-                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-                  <div class="w-10 rounded-full">
-                    <img
-                      alt="User avatar"
-                      src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                    />
-                  </div>
-                </div>
-                <ul
-                  tabindex="0"
-                  class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow"
-                >
-                  <li>
-                    <RouterLink class="justify-between" :to="{ name: 'AccountDashboard' }">
-                      My Account
-                    </RouterLink>
-                  </li>
-                  <li>
-                    <RouterLink class="justify-between" :to="{ name: 'OrderHistory' }">
-                      My Order
-                    </RouterLink>
-                  </li>
-                  <li>
-                    <RouterLink class="justify-between" :to="{ name: 'Login' }">
-                      Log Out
-                    </RouterLink>
-                  </li>
-                </ul>
+              <li v-else>
+                <RouterLink :to="{ name: 'Signup' }" class="btn bg-gray-200">Sign Up</RouterLink>
               </li>
             </ul>
           </div>
@@ -228,7 +222,10 @@ import { useWishlistStore } from '@/stores/wishlistStore'
 const wishlistStore = useWishlistStore()
 
 import { useAuthStore } from '@/stores/authStore'
-
 const authStore = useAuthStore()
-const { isLoggedIn, user, logout } = authStore
+
+const logout = async () => {
+  await authStore.logout()
+  router.push({ name: 'Home' })
+}
 </script>

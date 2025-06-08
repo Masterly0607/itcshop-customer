@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,23 +29,26 @@ const router = createRouter({
           path: 'cart',
           name: 'Cart',
           component: () => import('@/views/CartPage.vue'),
+          meta: { requiresAuth: true }, // Protected
         },
         {
           path: 'checkout',
           name: 'Checkout',
           component: () => import('@/views/CheckOutPage.vue'),
+          meta: { requiresAuth: true }, // Protected
         },
         {
           path: 'order-history',
           name: 'OrderHistory',
           component: () => import('@/views/OrderHistoryPage.vue'),
+          meta: { requiresAuth: true }, // Protected
         },
         {
           path: 'wishlist',
           name: 'WishList',
           component: () => import('@/views/WishListPage.vue'),
+          meta: { requiresAuth: true }, // Protected
         },
-
         {
           path: 'about-us',
           name: 'AboutUs',
@@ -54,11 +58,6 @@ const router = createRouter({
           path: 'contact-us',
           name: 'ContactUs',
           component: () => import('@/views/ContactUsPage.vue'),
-        },
-        {
-          path: 'order-history',
-          name: 'OrderHistory',
-          component: () => import('@/views/OrderHistoryPage.vue'),
         },
       ],
     },
@@ -72,6 +71,7 @@ const router = createRouter({
           path: '',
           name: 'AccountDashboard',
           component: () => import('@/views/AccountDashboardPage.vue'),
+          meta: { requiresAuth: true }, // Protected
         },
       ],
     },
@@ -85,6 +85,7 @@ const router = createRouter({
           path: 'order-confirmation/:orderId',
           name: 'OrderConfirmation',
           component: () => import('@/views/OrderConfirmation.vue'),
+          meta: { requiresAuth: true }, // Protected
         },
       ],
     },
@@ -98,42 +99,63 @@ const router = createRouter({
           path: '/login',
           name: 'Login',
           component: () => import('@/views/auth/LoginPage.vue'),
+          meta: {
+            requiresGuest: true,
+          },
         },
         {
           path: '/signup',
           name: 'Signup',
           component: () => import('@/views/auth/SignUpPage.vue'),
+          meta: {
+            requiresGuest: true,
+          },
         },
         {
           path: '/forgot-password',
           name: 'ForgotPassword',
           component: () => import('@/views/auth/ForgotPasswordPage.vue'),
+          meta: {
+            requiresGuest: true,
+          },
         },
         {
           path: '/reset-password',
           name: 'ResetPassword',
           component: () => import('@/views/auth/ResetPasswordPage.vue'),
+          meta: {
+            requiresGuest: true,
+          },
         },
         {
           path: '/verify-email',
           name: 'VerifyEmail',
           component: () => import('@/views/auth/VerifyEmailPage.vue'),
-        },
-        {
-          path: '/verify-email-success',
-          name: 'VerifyEmailSuccess',
-          component: () => import('@/views/auth/VerifyEmailSuccessPage.vue'),
+          meta: {
+            requiresGuest: true,
+          },
         },
       ],
     },
 
-    // // NotFound Page
     {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: () => import('@/NotFoundPage.vue'),
     },
   ],
+})
+
+// Route Guard
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore()
+  if (to.meta.requiresAuth && !authStore.token) {
+    next({ name: 'Login' })
+  } else if (to.meta.requiresGuest && authStore.token) {
+    next({ name: 'Home' })
+  } else {
+    next()
+  }
 })
 
 export default router

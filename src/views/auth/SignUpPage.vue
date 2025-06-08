@@ -21,16 +21,27 @@
         <div>
           <Field
             type="text"
-            placeholder="Name"
+            placeholder="First Name"
             class="input input-ghost w-full border-b-2 border-gray-300 border-0 rounded-none focus:ring-2 focus:ring-primary focus:outline-none"
             minlength="3"
             maxlength="30"
             title="Only letters, numbers or dash"
-            name="name"
+            name="firstName"
           />
-          <ErrorMessage class="text-red-500 text-xs block mt-1" name="name"> </ErrorMessage>
+          <ErrorMessage class="text-red-500 text-xs block mt-1" name="firstName"> </ErrorMessage>
         </div>
-
+        <div>
+          <Field
+            type="text"
+            placeholder="Last Name"
+            class="input input-ghost w-full border-b-2 border-gray-300 border-0 rounded-none focus:ring-2 focus:ring-primary focus:outline-none"
+            minlength="3"
+            maxlength="30"
+            title="Only letters, numbers or dash"
+            name="lastName"
+          />
+          <ErrorMessage class="text-red-500 text-xs block mt-1" name="lastName"> </ErrorMessage>
+        </div>
         <div>
           <Field
             name="email"
@@ -61,54 +72,63 @@
           <ErrorMessage class="text-red-500 text-xs block mt-1" name="confirmPassword">
           </ErrorMessage>
         </div>
+        <!-- Buttons -->
+        <div class="flex flex-col gap-5 0">
+          <BaseButton label="Create Account" :loading="loading" />
+
+          <div class="btn bg-white text-black border-[#e5e5e5] btn-block p-6 text-lg font-light">
+            <svg
+              aria-label="Google logo"
+              width="30"
+              height="30"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512"
+            >
+              <g>
+                <path d="m0 0H512V512H0" fill="#fff"></path>
+                <path
+                  fill="#34a853"
+                  d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"
+                ></path>
+                <path fill="#4285f4" d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"></path>
+                <path fill="#fbbc02" d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"></path>
+                <path
+                  fill="#ea4335"
+                  d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"
+                ></path>
+              </g>
+            </svg>
+            <span class="pl-1"> Sign up with Google </span>
+          </div>
+
+          <!-- Footer -->
+          <div class="text-center mt-8">
+            <span class="text-gray-500 pr-2">Already have account?</span>
+            <RouterLink :to="{ name: 'Login' }">
+              <span class="underline">Log in</span>
+            </RouterLink>
+          </div>
+        </div>
       </Form>
-
-      <!-- Buttons -->
-      <div class="flex flex-col gap-5 0">
-        <BaseButton label="Create Account" :loading="loading" @click="handleSignUp" />
-        <div class="btn bg-white text-black border-[#e5e5e5] btn-block p-6 text-lg font-light">
-          <svg
-            aria-label="Google logo"
-            width="30"
-            height="30"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 512 512"
-          >
-            <g>
-              <path d="m0 0H512V512H0" fill="#fff"></path>
-              <path fill="#34a853" d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"></path>
-              <path fill="#4285f4" d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"></path>
-              <path fill="#fbbc02" d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"></path>
-              <path
-                fill="#ea4335"
-                d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"
-              ></path>
-            </g>
-          </svg>
-          <span class="pl-1"> Sign up with Google </span>
-        </div>
-
-        <!-- Footer -->
-        <div class="text-center mt-8">
-          <span class="text-gray-500 pr-2">Already have account?</span>
-          <RouterLink :to="{ name: 'Login' }">
-            <span class="underline">Log in</span>
-          </RouterLink>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import axios from 'axios'
 import { Form, Field, ErrorMessage } from 'vee-validate' // Import VeeValidation Library for input validation
 import * as yup from 'yup' // Validation rule
 import BaseButton from '@/components/core/BaseButton.vue'
+import { useAuthStore } from '@/stores/authStore'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
 const loading = ref(false)
+const authStore = useAuthStore()
 const formValidation = yup.object({
-  name: yup.string().required('Name is required').min(3, 'Name must be at least 3 characters'),
+  firstName: yup.string().required('Name is required').min(3, 'Name must be at least 3 characters'),
+  lastName: yup.string().required('Name is required').min(3, 'Name must be at least 3 characters'),
   email: yup.string().required().email(),
   password: yup.string().required().min(8),
   confirmPassword: yup
@@ -117,18 +137,23 @@ const formValidation = yup.object({
     .oneOf([yup.ref('password')], 'Passwords do not match'),
 })
 
+// Handle Signup
+
 const handleSignUp = async (values) => {
   loading.value = true
   try {
-    const res = await axios.post('http://127.0.0.1:8000/api/register', {
-      name: values.name,
+    await authStore.register({
+      first_name: values.firstName,
+      last_name: values.lastName,
       email: values.email,
       password: values.password,
+      password_confirmation: values.confirmPassword,
     })
-    console.log(' Registered:', res.data)
+    //  Redirect to verify email page
+    router.push({ name: 'VerifyEmail' })
   } catch (err) {
-    console.error(err)
-    alert('Registration failed')
+    console.log(err)
+    alert(err?.response?.data?.message || 'Registration failed')
   } finally {
     loading.value = false
   }
