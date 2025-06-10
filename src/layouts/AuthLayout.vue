@@ -14,9 +14,6 @@ import { useAuthStore } from '@/stores/authStore'
 
 const authStore = useAuthStore()
 onMounted(() => {
-  const token = sessionStorage.getItem('TOKEN')
-  if (token) {
-    authStore.getUser()
-  }
+  authStore.init() // 👈 this sets token + customer from sessionStorage
 })
 </script>

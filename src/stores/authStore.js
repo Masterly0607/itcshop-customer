@@ -1,34 +1,37 @@
 import { defineStore } from 'pinia'
 import axiosClient from '@/axios'
 import router from '@/router'
+import { toast } from 'vue3-toastify'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    token: sessionStorage.getItem('TOKEN'),
-    customer: JSON.parse(sessionStorage.getItem('CUSTOMER') || 'null'),
-    // JSON.parse = JSON to object
-    // Why 'null'? = JSON.parse is expecting string, but when no user it will return null. It crashes our app.
+    token: null,
+    customer: null,
     pendingEmail: localStorage.getItem('pendingEmail') || null,
     loading: false,
   }),
 
-  // getters: computed properties for pinia store
   getters: {
-    isLoggedIn: (state) => !!state.token, // we want to get boolean value
-    // !!state.token = Converts any value into a real boolean
-    // state.token = return real values(if truely => 'masterly', else 'falsy' => null)
-    // !state.token = return boolean (if truely => false, else falsy => true )
-    // !!state.token = return boolean (if truely => true, else falsy => false )
-    // truely value = 'hello', 123(execpt 0), [], {}, '0'
-    // falsy value = false, 0, '', null, undefined, NaN
+    isLoggedIn: (state) => !!state.token,
   },
 
   actions: {
+    //  Restore from sessionStorage on app load
+    init() {
+      const token = sessionStorage.getItem('TOKEN')
+      const customer = sessionStorage.getItem('CUSTOMER')
+      this.token = token
+      try {
+        this.customer = customer ? JSON.parse(customer) : null
+      } catch {
+        this.customer = null
+      }
+    },
+
     async register(payload) {
       await axiosClient.post('/customer/register', payload)
       this.pendingEmail = payload.email
       localStorage.setItem('pendingEmail', payload.email)
-
       router.push({ name: 'VerifyEmail' })
     },
 
@@ -42,7 +45,7 @@ export const useAuthStore = defineStore('auth', {
       this.customer = response.data.customer
 
       sessionStorage.setItem('TOKEN', this.token)
-      sessionStorage.setItem('CUSTOMER', JSON.stringify(this.customer)) // why JSON.stringify(this.customer)? = Because sessionStorage (and localStorage) can only store strings, not objects or arrays. Axios (or Fetch) in JavaScript automatically converts the JSON string into a usable JavaScript object.
+      sessionStorage.setItem('CUSTOMER', JSON.stringify(this.customer))
 
       router.push({ name: 'Home' })
     },
@@ -58,6 +61,35 @@ export const useAuthStore = defineStore('auth', {
       router.push({ name: 'Home' })
     },
 
+    //  Step 1: Get Google Redirect URL from backend
+    async loginWithGoogleRedirect() {
+      try {
+        const response = await axiosClient.get('/customer/auth/redirect/google')
+
+        return response.data
+      } catch (err) {
+        console.error('Redirect fetch error:', err)
+        throw err
+      }
+    },
+
+    //  Step 2: After redirect back with token
+    async loginWithGoogle(token) {
+      this.token = token
+      sessionStorage.setItem('TOKEN', token)
+      axiosClient.defaults.headers.common.Authorization = `Bearer ${token}`
+
+      try {
+        const res = await axiosClient.get('/customer/profile')
+        this.customer = res.data
+        sessionStorage.setItem('CUSTOMER', JSON.stringify(res.data))
+        router.push({ name: 'Account' })
+      } catch (err) {
+        toast.error('Google login failed')
+        this.logout()
+      }
+    },
+
     logout() {
       this.token = null
       this.customer = null
@@ -69,7 +101,7 @@ export const useAuthStore = defineStore('auth', {
     async getUser() {
       this.loading = true
       try {
-        const response = await axiosClient.get('/customer/profile') // or /me
+        const response = await axiosClient.get('/customer/profile')
         this.customer = response.data.customer
         sessionStorage.setItem('CUSTOMER', JSON.stringify(this.customer))
       } catch (error) {
@@ -77,19 +109,18 @@ export const useAuthStore = defineStore('auth', {
         this.token = null
         sessionStorage.removeItem('CUSTOMER')
         sessionStorage.removeItem('TOKEN')
-        router.push({ name: 'Login' }) // redirect if session expired
+        router.push({ name: 'Login' })
       } finally {
         this.loading = false
       }
     },
 
-    // Update user information
     async updateUser(payload) {
       this.loading = true
       try {
         const response = await axiosClient.put('/customer/profile', payload)
-        this.customer = response.data.customer // Update local customer info
-        sessionStorage.setItem('CUSTOMER', JSON.stringify(this.customer)) // Sync to sessionStorage
+        this.customer = response.data.customer
+        sessionStorage.setItem('CUSTOMER', JSON.stringify(this.customer))
       } catch (error) {
         console.error('Update failed', error)
         throw error
@@ -98,14 +129,13 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    // Change password
     async changePassword(payload) {
       this.loading = true
       try {
         const response = await axiosClient.put('/customer/change-password', payload)
         return response.data
       } catch (error) {
-        console.error('Update failed', error)
+        console.error('Password change failed', error)
         throw error
       } finally {
         this.loading = false

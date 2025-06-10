@@ -76,7 +76,10 @@
         <div class="flex flex-col gap-5 0">
           <BaseButton label="Create Account" :loading="loading" />
 
-          <div class="btn bg-white text-black border-[#e5e5e5] btn-block p-6 text-lg font-light">
+          <div
+            class="btn bg-white text-black border-[#e5e5e5] btn-block p-6 text-lg font-light"
+            @click="handleGoogleSignup"
+          >
             <svg
               aria-label="Google logo"
               width="30"
@@ -115,21 +118,23 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { Form, Field, ErrorMessage } from 'vee-validate' // Import VeeValidation Library for input validation
-import * as yup from 'yup' // Validation rule
+import { ref, onMounted } from 'vue'
+import { Form, Field, ErrorMessage } from 'vee-validate'
+import * as yup from 'yup'
 import BaseButton from '@/components/core/BaseButton.vue'
 import { useAuthStore } from '@/stores/authStore'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { toast } from 'vue3-toastify'
 
 const router = useRouter()
-
+const route = useRoute()
 const loading = ref(false)
 const authStore = useAuthStore()
+
+//  Validation schema
 const formValidation = yup.object({
-  firstName: yup.string().required('Name is required').min(3, 'Name must be at least 3 characters'),
-  lastName: yup.string().required('Name is required').min(3, 'Name must be at least 3 characters'),
+  firstName: yup.string().required('Name is required').min(3, 'Min 3 chars'),
+  lastName: yup.string().required('Name is required').min(3),
   email: yup.string().required().email(),
   password: yup.string().required().min(8),
   confirmPassword: yup
@@ -138,8 +143,7 @@ const formValidation = yup.object({
     .oneOf([yup.ref('password')], 'Passwords do not match'),
 })
 
-// Handle Signup
-
+//  Normal signup
 const handleSignUp = async (values) => {
   loading.value = true
   try {
@@ -150,13 +154,31 @@ const handleSignUp = async (values) => {
       password: values.password,
       password_confirmation: values.confirmPassword,
     })
-    //  Redirect to verify email page
     router.push({ name: 'VerifyEmail' })
   } catch (err) {
-    console.log(err)
     toast.error(err?.response?.data?.message || 'Registration failed')
   } finally {
     loading.value = false
   }
 }
+
+//  Google signup redirect
+const handleGoogleSignup = async () => {
+  try {
+    const { url } = await authStore.loginWithGoogleRedirect()
+    if (!url) throw new Error('No URL returned from backend')
+    window.location.href = url
+  } catch (error) {
+    console.error('Google signup redirect failed:', error)
+    toast.error('Google signup failed')
+  }
+}
+
+//  Google redirect with token (ex: /auth/google-success?token=xxxxx)
+onMounted(() => {
+  const token = route.query.token
+  if (token) {
+    authStore.loginWithGoogleToken(token)
+  }
+})
 </script>

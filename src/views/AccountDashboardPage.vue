@@ -148,7 +148,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { Form, Field, ErrorMessage, useForm } from 'vee-validate'
 import * as yup from 'yup'
 import OrderHistoryPage from './OrderHistoryPage.vue'
@@ -158,16 +158,20 @@ import { toast } from 'vue3-toastify'
 const activeTab = ref('profile')
 const loading = ref(false)
 const authStore = useAuthStore()
-const { resetForm } = useForm()
+
 const passwordFormRef = ref(null)
 
-const profileInitial = {
+const profileInitial = computed(() => ({
   firstName: authStore.customer?.first_name || '',
   lastName: authStore.customer?.last_name || '',
   email: authStore.customer?.email || '',
   address: authStore.customer?.address || '',
   phone: authStore.customer?.phone || '',
-}
+}))
+const { resetForm } = useForm({
+  enableReinitialize: true,
+  initialValues: profileInitial,
+})
 
 const profileValidation = yup.object({
   firstName: yup.string().required().min(3),

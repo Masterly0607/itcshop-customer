@@ -10,7 +10,7 @@ import 'vue3-toastify/dist/index.css'
 
 // Font Awesome core
 import { library } from '@fortawesome/fontawesome-svg-core'
-
+import { useAuthStore } from '@/stores/authStore'
 // Import specific icons from Font Awesome
 import {
   faMobileAlt,
@@ -53,3 +53,5 @@ app.use(Toastify, { autoClose: 3000, position: 'top-left' })
 app.use(createPinia())
 app.use(router)
 app.mount('#app')
+const authStore = useAuthStore()
+authStore.init()
