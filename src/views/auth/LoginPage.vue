@@ -36,12 +36,12 @@
         <BaseButton label="Login" :loading="loading" type="submit" />
       </Form>
       <!-- Button -->
-      <div class="flex justify-between">
+      <div class="flex mt-2">
         <RouterLink :to="{ name: 'ForgotPassword' }">
           <span class="text-primary text-xs underline">Forgot Password?</span>
         </RouterLink>
       </div>
-      <div class="mt-5 text-xs">
+      <div class="mt-5 text-xs text-center">
         Don't have an account?
         <RouterLink :to="{ name: 'Signup' }" class="text-primary underline ml-1">
           Sign Up

@@ -1,24 +1,29 @@
 <template>
   <div class="flex flex-col items-center rounded-lg shadow-lg p-8 bg-white">
     <div class="font-bold text-4xl mb-4">Forgot Your Password?</div>
-    <div class="text-sm text-gray-400">
-      Enter your email and we’ll send you a link to reset your password.
+    <div class="text-sm text-gray-400 text-center">
+      Enter your email and we’ll send you a code to reset your password.
     </div>
 
-    <!-- Input -->
-    <fieldset class="fieldset mt-8 w-full">
-      <legend class="fieldset-legend">Email address</legend>
-      <Form :validation-schema="formValidation">
+    <!-- Form -->
+    <Form :validation-schema="formValidation" @submit="handleSendOtp" class="mt-8 w-full max-w-sm">
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Email address</legend>
         <Field
+          v-model="email"
           type="email"
           name="email"
-          class="input w-full input-xl rounded-none focus:ring-2 focus:ring-primary focus:outline-none border border-gray-300"
+          placeholder="you@example.com"
+          class="input w-full input-lg rounded-none focus:ring-2 focus:ring-primary focus:outline-none border border-gray-300"
         />
-        <ErrorMessage class="text-red-500 text-xs block mt-1" name="email"> </ErrorMessage>
-      </Form>
-    </fieldset>
-    <BaseButton label="Send Reset Link" :loading="loading" />
-    <RouterLink :to="{ name: 'Login' }" class="mt-3">
+        <ErrorMessage class="text-red-500 text-xs block mt-1" name="email" />
+      </fieldset>
+
+      <!-- Submit Button -->
+      <BaseButton class="mt-5" type="submit" label="Send Reset Link" :loading="loading" />
+    </Form>
+
+    <RouterLink :to="{ name: 'Login' }" class="mt-4">
       <span class="text-sm text-light text-primary">Back to Login</span>
     </RouterLink>
   </div>
@@ -26,11 +31,31 @@
 
 <script setup>
 import { ref } from 'vue'
-import { Form, Field, ErrorMessage } from 'vee-validate' // Import VeeValidation Library for input validation
-import * as yup from 'yup' // Validation rule
+import { useRouter } from 'vue-router'
+import { Form, Field, ErrorMessage } from 'vee-validate'
+import * as yup from 'yup'
+import { useAuthStore } from '@/stores/authStore'
 import BaseButton from '@/components/core/BaseButton.vue'
-const formValidation = yup.object({
-  email: yup.string().required().email(),
-})
+
+const router = useRouter()
+const authStore = useAuthStore()
 const loading = ref(false)
+
+const email = ref('')
+const formValidation = yup.object({
+  email: yup.string().email().required('Email is required'),
+})
+
+const handleSendOtp = async () => {
+  loading.value = true
+  try {
+    await authStore.sendForgotOtp(email.value)
+    localStorage.setItem('resetEmail', email.value)
+    router.push({ name: 'VerifyEmail', query: { mode: 'forgot' } })
+  } catch (err) {
+    console.error(err)
+  } finally {
+    loading.value = false
+  }
+}
 </script>

@@ -9,6 +9,8 @@ export const useAuthStore = defineStore('auth', {
     customer: null,
     pendingEmail: localStorage.getItem('pendingEmail') || null,
     loading: false,
+    resendCooldown: 0,
+    resendOtpTimer: null,
   }),
 
   getters: {
@@ -16,36 +18,30 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    //  Restore from sessionStorage on app load
     init() {
-      const token = sessionStorage.getItem('TOKEN')
+      this.token = sessionStorage.getItem('TOKEN')
       const customer = sessionStorage.getItem('CUSTOMER')
-      this.token = token
-      try {
-        this.customer = customer ? JSON.parse(customer) : null
-      } catch {
-        this.customer = null
-      }
+      this.customer = customer ? JSON.parse(customer) : null
+      this.pendingEmail = localStorage.getItem('pendingEmail') || null
     },
 
     async register(payload) {
       await axiosClient.post('/customer/register', payload)
       this.pendingEmail = payload.email
       localStorage.setItem('pendingEmail', payload.email)
-      router.push({ name: 'VerifyEmail' })
+      this.startResendCooldown()
+      router.push({ name: 'VerifyEmail', query: { mode: 'register' } })
     },
 
     async verifyOtp({ otp }) {
-      const payload = {
-        email: this.pendingEmail,
-        otp,
-      }
+      const payload = { email: this.pendingEmail, otp }
       const response = await axiosClient.post('/customer/verify-otp', payload)
+
       this.token = response.data.token
       this.customer = response.data.customer
-
       sessionStorage.setItem('TOKEN', this.token)
       sessionStorage.setItem('CUSTOMER', JSON.stringify(this.customer))
+      localStorage.removeItem('pendingEmail')
 
       router.push({ name: 'Home' })
     },
@@ -54,26 +50,16 @@ export const useAuthStore = defineStore('auth', {
       const response = await axiosClient.post('/customer/login', { email, password })
       this.token = response.data.token
       this.customer = response.data.customer
-
       sessionStorage.setItem('TOKEN', this.token)
       sessionStorage.setItem('CUSTOMER', JSON.stringify(this.customer))
-
       router.push({ name: 'Home' })
     },
 
-    //  Step 1: Get Google Redirect URL from backend
     async loginWithGoogleRedirect() {
-      try {
-        const response = await axiosClient.get('/customer/auth/redirect/google')
-
-        return response.data
-      } catch (err) {
-        console.error('Redirect fetch error:', err)
-        throw err
-      }
+      const response = await axiosClient.get('/customer/auth/redirect/google')
+      return response.data
     },
 
-    //  Step 2: After redirect back with token
     async loginWithGoogle(token) {
       this.token = token
       sessionStorage.setItem('TOKEN', token)
@@ -95,6 +81,7 @@ export const useAuthStore = defineStore('auth', {
       this.customer = null
       sessionStorage.removeItem('TOKEN')
       sessionStorage.removeItem('CUSTOMER')
+      localStorage.removeItem('pendingEmail')
       router.push({ name: 'Login' })
     },
 
@@ -140,6 +127,68 @@ export const useAuthStore = defineStore('auth', {
       } finally {
         this.loading = false
       }
+    },
+
+    async sendForgotOtp(email) {
+      try {
+        const res = await axiosClient.post('/customer/forgot-password/send-otp', { email })
+        toast.success(res.data.message)
+        this.pendingEmail = email
+        localStorage.setItem('pendingEmail', email)
+        this.startResendCooldown()
+        router.push({ name: 'VerifyEmail', query: { mode: 'forgot' } })
+      } catch (err) {
+        toast.error(err.response?.data?.message || 'Failed to send OTP')
+        throw err
+      }
+    },
+
+    async verifyForgotOtp({ otp }) {
+      try {
+        const payload = { email: this.pendingEmail, otp }
+        await axiosClient.post('/customer/forgot-password/verify-otp', payload)
+        localStorage.setItem('resetOtp', otp)
+      } catch (err) {
+        throw err
+      }
+    },
+
+    async resetPassword(payload) {
+      try {
+        payload.email = this.pendingEmail
+        payload.otp = localStorage.getItem('resetOtp')
+        const res = await axiosClient.post('/customer/forgot-password/reset', payload)
+        toast.success(res.data.message)
+        localStorage.removeItem('pendingEmail')
+        localStorage.removeItem('resetOtp')
+        router.push({ name: 'Login' })
+      } catch (err) {
+        toast.error(err.response?.data?.message || 'Password reset failed')
+        throw err
+      }
+    },
+
+    async resendOtp({ email }) {
+      try {
+        const res = await axiosClient.post('/customer/resend-otp', { email })
+        toast.success(res.data.message)
+        this.startResendCooldown()
+      } catch (err) {
+        toast.error(err.response?.data?.message || 'Resend failed')
+        throw err
+      }
+    },
+
+    startResendCooldown() {
+      this.resendCooldown = 60
+      if (this.resendOtpTimer) clearInterval(this.resendOtpTimer)
+      this.resendOtpTimer = setInterval(() => {
+        if (this.resendCooldown > 0) {
+          this.resendCooldown--
+        } else {
+          clearInterval(this.resendOtpTimer)
+        }
+      }, 1000)
     },
   },
 })
