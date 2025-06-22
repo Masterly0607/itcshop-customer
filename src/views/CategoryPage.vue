@@ -15,7 +15,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useProductsStore } from '@/stores/productsStore'
-import CardComponent from './CardComponent.vue'
+import CardComponent from '@/components/core/CardComponent.vue'
 
 const route = useRoute()
 const productsStore = useProductsStore()
@@ -28,12 +28,16 @@ const categoryTitle = computed(() => {
 })
 
 const filteredProducts = computed(() => {
-  return productsStore.productsList.filter((product) => {
+  const products = productsStore.productsList || []
+
+  return products.filter((product) => {
+    const productCategory = product.category?.name // ✅ extract name safely
+
     const matchesCategory =
-      !category.value || product.category?.toLowerCase() === category.value.toLowerCase()
+      !category.value || productCategory?.toLowerCase() === category.value.toLowerCase()
 
     const matchesSearch =
-      !searchQuery.value || product.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+      !searchQuery.value || product.title?.toLowerCase().includes(searchQuery.value.toLowerCase())
 
     return matchesCategory && matchesSearch
   })

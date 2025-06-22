@@ -52,6 +52,7 @@ app.component('font-awesome-icon', FontAwesomeIcon)
 app.use(Toastify, { autoClose: 3000, position: 'top-left' })
 app.use(createPinia())
 app.use(router)
-app.mount('#app')
 const authStore = useAuthStore()
 authStore.init()
+app.mount('#app')
+

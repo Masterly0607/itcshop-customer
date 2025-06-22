@@ -10,17 +10,21 @@ const router = createRouter({
       component: () => import('@/layouts/DefaultLayout.vue'),
       children: [
         { path: '', name: 'Home', component: () => import('@/views/HomePage.vue') },
-        { path: 'shop', name: 'Shop', component: () => import('@/views/ShopPage.vue') },
+        { path: 'shop', name: 'Shop', component: () => import('@/views/ProductListPage.vue') },
         {
           path: 'product/:id',
           name: 'ProductDetail',
           component: () => import('@/views/ProductDetailPage.vue'),
         },
         {
-          path: 'products',
-          name: 'ProductsByCategory',
-          component: () => import('@/components/core/ProductsByCategoryPage.vue'),
+          path: '/products/category/:categoryName',
+          name: 'CategoryPage',
+          component: () => import('@/views/CategoryPage.vue'),
         },
+        // { path: '/products/flash-sale', component: FlashSalePage },
+        // { path: '/products/best-selling', component: BestSellingPage },
+        // { path: '/products/new', component: NewProductsPage },
+        // { path: '/search', component: SearchResultsPage },
         {
           path: 'cart',
           name: 'Cart',
@@ -117,24 +121,13 @@ const router = createRouter({
           component: () => import('@/views/auth/VerifyEmailPage.vue'),
           meta: { requiresGuest: true },
         },
-        {
-          path: '/auth/google-success',
-          name: 'GoogleSuccess',
-          component: {
-            template: '<div>Redirecting...</div>',
-            async created() {
-              const token = this.$route.query.token
-              if (token) {
-                // Get user profile if needed, or store token and redirect
-                sessionStorage.setItem('TOKEN', token)
-                await useAuthStore().getUser()
-                this.$router.push({ name: 'Home' })
-              } else {
-                this.$router.push({ name: 'Login' })
-              }
-            },
-          },
-        },
+{
+  path: 'google-success',
+  name: 'GoogleSuccess',
+  component: () => import('@/views/auth/GoogleSuccessPage.vue'),
+  meta: { requiresGuest: true },
+},
+
       ],
     },
 

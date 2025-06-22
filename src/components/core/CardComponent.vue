@@ -19,7 +19,7 @@
       </figure>
       <div class="card-body">
         <div class="flex flex-col gap-2">
-          <h2 class="card-title text-sm">{{ product.name }}</h2>
+          <h2 class="card-title text-sm">{{ product.title }}</h2>
           <p>
             <span class="text-primary pr-3 text-xs">${{ product.price }}</span>
             <span v-if="product.oldPrice" class="line-through text-xs"
@@ -97,12 +97,12 @@ const isInWishlist = computed(() =>
   wishlistStore.wishlistItems.some((item) => item.id === props.product.id),
 )
 
-// Add to cart handler
-const handleAddToCart = () => {
+// Add to cart function
+const handleAddToCart = async () => {
   if (isInCart.value) {
     router.push({ name: 'Cart' })
   } else {
-    cartStore.addToCart(props.product)
+    await cartStore.addToCart(props.product)
     wishlistStore.removeFromWishlist(props.product.id)
     toast.success(`${props.product.name} added to cart!`)
   }

@@ -165,9 +165,10 @@ const handleSignUp = async (values) => {
 //  Google signup redirect
 const handleGoogleSignup = async () => {
   try {
-    const { url } = await authStore.loginWithGoogleRedirect()
-    if (!url) throw new Error('No URL returned from backend')
-    window.location.href = url
+const url = await authStore.loginWithGoogleRedirect()
+if (!url) throw new Error('No URL returned from backend')
+window.location.href = url
+
   } catch (error) {
     console.error('Google signup redirect failed:', error)
     toast.error('Google signup failed')
@@ -178,7 +179,7 @@ const handleGoogleSignup = async () => {
 onMounted(() => {
   const token = route.query.token
   if (token) {
-    authStore.loginWithGoogleToken(token)
+    authStore.loginWithGoogle(token)
   }
 })
 </script>

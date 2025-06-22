@@ -18,12 +18,20 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    init() {
-      this.token = sessionStorage.getItem('TOKEN')
-      const customer = sessionStorage.getItem('CUSTOMER')
-      this.customer = customer ? JSON.parse(customer) : null
-      this.pendingEmail = localStorage.getItem('pendingEmail') || null
-    },
+   init() {
+  this.token = sessionStorage.getItem('TOKEN')
+
+  const customer = sessionStorage.getItem('CUSTOMER')
+  try {
+    this.customer = customer && customer !== 'undefined' ? JSON.parse(customer) : null
+  } catch (e) {
+    console.error('Failed to parse customer:', customer)
+    this.customer = null
+  }
+
+  this.pendingEmail = localStorage.getItem('pendingEmail') || null
+},
+
 
     async register(payload) {
       await axiosClient.post('/customer/register', payload)
@@ -55,26 +63,42 @@ export const useAuthStore = defineStore('auth', {
       router.push({ name: 'Home' })
     },
 
-    async loginWithGoogleRedirect() {
-      const response = await axiosClient.get('/customer/auth/redirect/google')
-      return response.data
-    },
+  async loginWithGoogleRedirect() {
+  try {
+    const response = await axiosClient.get('/customer/auth/redirect/google')
+    if (response?.data?.url) {
+      return response.data.url
+    } else {
+      throw new Error('Google signup redirect URL missing')
+    }
+  } catch (err) {
+    toast.error('Failed to start Google signup')
+    console.error('Redirect error:', err)
+    throw err
+  }
+},
 
-    async loginWithGoogle(token) {
-      this.token = token
-      sessionStorage.setItem('TOKEN', token)
-      axiosClient.defaults.headers.common.Authorization = `Bearer ${token}`
 
-      try {
-        const res = await axiosClient.get('/customer/profile')
-        this.customer = res.data
-        sessionStorage.setItem('CUSTOMER', JSON.stringify(res.data))
-        router.push({ name: 'Account' })
-      } catch (err) {
-        toast.error('Google login failed')
-        this.logout()
-      }
-    },
+   async loginWithGoogle(token) {
+  this.token = token
+  sessionStorage.setItem('TOKEN', token)
+
+  axiosClient.defaults.headers.common.Authorization = `Bearer ${token}`
+
+  try {
+    const res = await axiosClient.get('/customer/profile')
+    this.customer = res.data
+    sessionStorage.setItem('CUSTOMER', JSON.stringify(res.data))
+
+    // ✅ Use correct route name if needed
+    router.push({ name: 'AccountDashboard' })
+  } catch (err) {
+    console.error('Google login failed:', err)
+    toast.error(err?.response?.data?.message || 'Google login failed')
+    this.logout()
+  }
+},
+
 
     logout() {
       this.token = null
@@ -85,22 +109,17 @@ export const useAuthStore = defineStore('auth', {
       router.push({ name: 'Login' })
     },
 
-    async getUser() {
-      this.loading = true
-      try {
-        const response = await axiosClient.get('/customer/profile')
-        this.customer = response.data.customer
-        sessionStorage.setItem('CUSTOMER', JSON.stringify(this.customer))
-      } catch (error) {
-        this.customer = null
-        this.token = null
-        sessionStorage.removeItem('CUSTOMER')
-        sessionStorage.removeItem('TOKEN')
-        router.push({ name: 'Login' })
-      } finally {
-        this.loading = false
-      }
-    },
+   getUser() {
+  const token = sessionStorage.getItem('TOKEN')
+  const customer = sessionStorage.getItem('CUSTOMER')
+
+  if (token && customer) {
+    this.token = token
+    this.customer = JSON.parse(customer)
+    axiosClient.defaults.headers.common.Authorization = `Bearer ${token}`
+  }
+},
+
 
     async updateUser(payload) {
       this.loading = true

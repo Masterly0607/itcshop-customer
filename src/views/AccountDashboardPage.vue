@@ -10,6 +10,7 @@
     </div>
 
     <div class="flex mt-10 items-start gap-10">
+      <!-- Sidebar -->
       <div class="w-1/3 bg-gray-50 p-5 shadow-lg">
         <div>Manage My Account</div>
         <div class="pl-10 mt-3 text-gray-500 text-sm">
@@ -37,6 +38,7 @@
         </div>
       </div>
 
+      <!-- Profile -->
       <div class="w-2/3 bg-gray-50 p-10 shadow-lg" v-if="activeTab === 'profile'">
         <SpinnerComponent :show="loading" size="lg" type="loading-bars" />
         <div class="text-primary font-medium text-lg mb-3">Edit Your Profile</div>
@@ -65,13 +67,14 @@
               <Field type="email" class="input" name="email" />
               <ErrorMessage class="text-red-500 text-xs block mt-1" name="email" />
             </fieldset>
+
             <fieldset class="fieldset">
               <legend class="fieldset-legend">Phone</legend>
-              <Field type="phone" class="input" name="phone" />
+              <Field type="text" class="input" name="phone" />
               <ErrorMessage class="text-red-500 text-xs block mt-1" name="phone" />
             </fieldset>
 
-            <fieldset class="fieldset">
+            <fieldset class="fieldset col-span-2">
               <legend class="fieldset-legend">Address</legend>
               <Field type="text" class="input" name="address" />
               <ErrorMessage class="text-red-500 text-xs block mt-1" name="address" />
@@ -83,7 +86,7 @@
           </div>
         </Form>
 
-        <!-- Password Form -->
+        <!-- Change Password -->
         <div class="text-primary font-medium text-lg mt-10 mb-3">Change Password</div>
 
         <Form
@@ -118,16 +121,16 @@
         </Form>
       </div>
 
+      <!-- Order Tab -->
       <div v-else-if="activeTab === 'order'" class="bg-gray-50 p-5 shadow-lg w-2/3">
         <OrderHistoryPage />
       </div>
 
+      <!-- Payment Tab -->
       <div v-else-if="activeTab === 'payment'" class="bg-gray-50 p-5 shadow-lg w-2/3">
         <div class="text-primary font-medium text-lg mb-4">My Payment Methods</div>
         <div class="space-y-4">
-          <div
-            class="border border-gray-200 rounded-lg p-4 bg-white shadow-sm flex justify-between items-center"
-          >
+          <div class="border border-gray-200 rounded-lg p-4 bg-white shadow-sm flex justify-between items-center">
             <div>
               <p class="font-semibold">Visa **** **** **** 1234</p>
               <p class="text-sm text-gray-500">Expires: 12/26</p>
@@ -136,10 +139,13 @@
           </div>
           <button class="btn btn-primary text-white">Add New Card</button>
         </div>
+
         <div class="mt-6">
           <div class="text-sm font-medium text-gray-600 mb-2">Billing Address</div>
           <div class="border p-4 rounded-lg bg-gray-50 text-sm text-gray-700">
-            Sok Masterly<br />Phnom Penh, Cambodia<br />Email: sokmasterlychanon06@gmail.com
+            Sok Masterly<br />
+            Phnom Penh, Cambodia<br />
+            Email: sokmasterlychanon06@gmail.com
           </div>
         </div>
       </div>
@@ -148,63 +154,27 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { Form, Field, ErrorMessage, useForm } from 'vee-validate'
+import { ref, computed, onMounted } from 'vue'
+import { Form, Field, ErrorMessage } from 'vee-validate'
 import * as yup from 'yup'
-import OrderHistoryPage from './OrderHistoryPage.vue'
+
 import SpinnerComponent from '@/components/core/SpinnerComponent.vue'
+import OrderHistoryPage from './OrderHistoryPage.vue'
 import { useAuthStore } from '@/stores/authStore'
 import { toast } from 'vue3-toastify'
-const activeTab = ref('profile')
-const loading = ref(false)
+
 const authStore = useAuthStore()
-
+const loading = ref(false)
+const activeTab = ref('profile')
 const passwordFormRef = ref(null)
-
-const profileInitial = computed(() => ({
-  firstName: authStore.customer?.first_name || '',
-  lastName: authStore.customer?.last_name || '',
-  email: authStore.customer?.email || '',
-  address: authStore.customer?.address || '',
-  phone: authStore.customer?.phone || '',
-}))
-const { resetForm } = useForm({
-  enableReinitialize: true,
-  initialValues: profileInitial,
-})
 
 const profileValidation = yup.object({
   firstName: yup.string().required().min(3),
   lastName: yup.string().required().min(3),
   email: yup.string().required().email(),
   address: yup.string().required().min(5),
-  phone: yup
-    .string()
-    .required('Phone is required')
-    .matches(/^\d{6,12}$/, 'Phone must be 6 to 12 digits'),
+  phone: yup.string().required().matches(/^\d{6,12}$/, 'Phone must be 6 to 12 digits'),
 })
-
-const updateProfile = async (values, { setErrors }) => {
-  loading.value = true
-  try {
-    await authStore.updateUser({
-      first_name: values.firstName,
-      last_name: values.lastName,
-      email: values.email,
-      address: values.address,
-      phone: values.phone,
-    })
-    toast.success('Profile updated!')
-  } catch (err) {
-    const message = err.response?.data?.message || 'Failed to update profile'
-    toast.error(message)
-    if (err.response?.data?.errors) {
-      setErrors(err.response.data.errors)
-    }
-  } finally {
-    loading.value = false
-  }
-}
 
 const passwordInitial = {
   currentPassword: '',
@@ -221,6 +191,36 @@ const passwordValidation = yup.object({
     .oneOf([yup.ref('password')], 'Passwords do not match'),
 })
 
+const profileInitial = computed(() => {
+  const u = authStore.customer
+  return {
+    firstName: u?.first_name || '',
+    lastName: u?.last_name || '',
+    email: u?.email || '',
+    phone: u?.phone || '',
+    address: u?.address || '',
+  }
+})
+
+const updateProfile = async (values, { setErrors }) => {
+  loading.value = true
+  try {
+    await authStore.updateUser({
+      first_name: values.firstName,
+      last_name: values.lastName,
+      email: values.email,
+      phone: values.phone,
+      address: values.address,
+    })
+    toast.success('Profile updated!')
+  } catch (err) {
+    toast.error(err.response?.data?.message || 'Failed to update profile')
+    if (err.response?.data?.errors) setErrors(err.response.data.errors)
+  } finally {
+    loading.value = false
+  }
+}
+
 const changePassword = async (values, { setErrors }) => {
   loading.value = true
   try {
@@ -229,16 +229,24 @@ const changePassword = async (values, { setErrors }) => {
       new_password: values.password,
       new_password_confirmation: values.confirmPassword,
     })
-
     toast.success('Password changed!')
     passwordFormRef.value?.resetForm()
   } catch (err) {
     toast.error(err.response?.data?.message || 'Failed to change password')
-    if (err.response?.data?.errors) {
-      setErrors(err.response.data.errors)
-    }
+    if (err.response?.data?.errors) setErrors(err.response.data.errors)
   } finally {
     loading.value = false
   }
 }
+
+onMounted(async () => {
+  loading.value = true
+  try {
+    if (!authStore.customer) await authStore.getUser()
+  } catch (e) {
+    console.error('Failed to load user:', e)
+  } finally {
+    loading.value = false
+  }
+})
 </script>
