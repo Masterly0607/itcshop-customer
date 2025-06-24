@@ -38,7 +38,6 @@ export const useCartStore = defineStore('cart', {
       try {
         await axiosClient.put(`/cart/${cartId}`, { quantity })
         await this.fetchCart()
-        toast.success('Cart updated!')
       } catch (err) {
         toast.error('Failed to update quantity')
         console.error(err)

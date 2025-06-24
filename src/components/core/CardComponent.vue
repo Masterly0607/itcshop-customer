@@ -103,13 +103,12 @@ const handleAddToCart = async () => {
     router.push({ name: 'Cart' })
   } else {
     await cartStore.addToCart(props.product)
-    wishlistStore.removeFromWishlist(props.product.id)
     toast.success(`${props.product.name} added to cart!`)
   }
 }
 
-// Toggle wishlist handler
-// ✅ Updated toggle wishlist handler using backend
+
+// Updated toggle wishlist handler using backend
 const handleToggleWishlist = async () => {
   const exists = isInWishlist.value
 
