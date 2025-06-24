@@ -3,7 +3,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
-
+import { useWishlistStore } from '@/stores/wishlistStore'
 // Toast
 import Toastify from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
@@ -59,5 +59,7 @@ app.use(router)
 // Auth init (optional)
 const authStore = useAuthStore()
 authStore.init()
+const wishlistStore = useWishlistStore()
+wishlistStore.fetchWishlist()
 
 app.mount('#app')

@@ -109,14 +109,22 @@ const handleAddToCart = async () => {
 }
 
 // Toggle wishlist handler
-const handleToggleWishlist = () => {
-  const wasInWishlist = isInWishlist.value
-  wishlistStore.toggleWishlist(props.product)
+// ✅ Updated toggle wishlist handler using backend
+const handleToggleWishlist = async () => {
+  const exists = isInWishlist.value
 
-  if (wasInWishlist) {
-    toast.info(`${props.product.name} removed from wishlist`)
-  } else {
-    toast.success(`${props.product.name} added to wishlist`)
+  try {
+    await wishlistStore.toggleWishlist(props.product)
+
+    if (exists) {
+      toast.info(`${props.product.title} removed from wishlist`)
+    } else {
+      toast.success(`${props.product.title} added to wishlist`)
+    }
+  } catch (err) {
+    toast.error('Failed to update wishlist')
+    console.error(err)
   }
 }
+
 </script>

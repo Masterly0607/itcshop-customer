@@ -19,69 +19,37 @@
         :key="item.id"
         class="flex items-center shadow-md p-4 rounded-xl px-6 bg-white justify-center"
       >
-        <!-- Product Info -->
         <div class="w-1/4 flex items-center gap-3">
-          <img :src="item.img" alt="item image" class="h-16 w-16 object-cover rounded" />
-          <span class="truncate text-sm">{{ item.name }}</span>
+          <img :src="item.image" class="h-16 w-16 object-cover rounded" />
+          <span class="truncate text-sm">{{ item.title }}</span>
         </div>
 
-        <!-- Price -->
-        <div class="w-1/4 text-center text-sm">${{ item.price }}</div>
+        <div class="w-1/4 text-center text-sm">${{ Number(item.price).toFixed(2) }}</div>
 
-        <!-- Quantity -->
         <div class="w-1/4 text-center text-sm">
-          <select v-model="item.quantity" class="border rounded px-2 py-1 w-16 text-center">
-            <option v-for="n in 10" :key="n" :value="n">
-              {{ n.toString().padStart(2, '0') }}
-            </option>
+          <select
+            v-model="item.quantity"
+            class="border rounded px-2 py-1 w-16 text-center"
+            @change="updateQty(item)"
+          >
+            <option v-for="n in 10" :key="n" :value="n">{{ n }}</option>
           </select>
         </div>
 
-        <!-- Subtotal -->
-        <div class="w-1/4 text-center text-sm">${{ (item.price * item.quantity).toFixed(2) }}</div>
+        <div class="w-1/4 text-center text-sm">
+          ${{ (Number(item.price) * item.quantity).toFixed(2) }}
+        </div>
       </div>
 
-      <button class="btn btn-outline px-10 py-5 mt-3 mb-10 btn-sm">Return To Shop</button>
+      <!-- Footer -->
+      <div class="mt-10 flex justify-between items-center">
+        <router-link to="/shop" class="btn btn-outline btn-sm">← Continue Shopping</router-link>
 
-      <div class="flex items-start gap-40 justify-between">
-        <div class="flex gap-3 w-1/2">
-          <input type="text" placeholder="Coupon Code" class="input input-neutral" />
-          <button class="btn btn-primary px-10 py-5 text-white font-light btn-sm">
-            Apply Coupon
-          </button>
-        </div>
-
-        <div class="w-1/2">
-          <div class="w-full p-5 border-solid border-2">
-            <div class="mb-7 text-xl font-medium">Cart Total</div>
-            <div>
-              <div>
-                <div class="flex justify-between text-sm">
-                  <span>Subtotal:</span>
-                  <span>$1750</span>
-                </div>
-                <div class="divider mb-0"></div>
-              </div>
-              <div>
-                <div class="flex justify-between text-sm">
-                  <span>Shipping:</span>
-                  <span>Free</span>
-                </div>
-                <div class="divider mb-0"></div>
-              </div>
-              <div>
-                <div class="flex justify-between text-sm">
-                  <span>Total:</span>
-                  <span>$1750</span>
-                </div>
-              </div>
-            </div>
-            <div class="flex justify-center mt-5">
-              <button class="btn btn-primary px-10 py-5 text-white font-light">
-                Process to checkout
-              </button>
-            </div>
-          </div>
+        <div class="text-right space-y-2">
+          <div class="text-sm">Subtotal: <strong>${{ subtotal }}</strong></div>
+          <div class="text-sm">Shipping: <strong>Free</strong></div>
+          <div class="text-md font-semibold">Total: <strong>${{ subtotal }}</strong></div>
+          <button class="btn btn-primary text-white mt-2">Proceed to Checkout</button>
         </div>
       </div>
     </div>
@@ -91,6 +59,18 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useCartStore } from '@/stores/cartStore'
+
 const cartStore = useCartStore()
+
+const updateQty = (item) => {
+  cartStore.updateQuantity(item.id, item.quantity)
+}
+
+const subtotal = computed(() => {
+  return cartStore.cartItems
+    .reduce((sum, item) => sum + Number(item.price) * item.quantity, 0)
+    .toFixed(2)
+})
 </script>

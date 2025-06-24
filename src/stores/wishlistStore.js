@@ -1,33 +1,57 @@
 import { defineStore } from 'pinia'
+import axiosClient from '@/axios'
+import { toast } from 'vue3-toastify'
 
 export const useWishlistStore = defineStore('wishlist', {
   state: () => ({
-    wishlistItems: [], // ✅ must be an array always
+    wishlistItems: [],
   }),
+
   getters: {
     wishlistCount: (state) => state.wishlistItems.length,
   },
+
   actions: {
-    // Add product
-    addToWishlist(product) {
-      const exists = this.wishlistItems.find((p) => p.id === product.id)
-      if (!exists) {
-        this.wishlistItems.push({ ...product, quantity: 1 })
+    async fetchWishlist() {
+      try {
+        const res = await axiosClient.get('/wishlist')
+        this.wishlistItems = res.data.data// extract product from wishlist
+      } catch (err) {
+        toast.error('Failed to load wishlist')
+        console.error(err)
       }
     },
 
-    // ✅ Fix remove logic
-    removeFromWishlist(productId) {
-      this.wishlistItems = this.wishlistItems.filter((p) => p.id !== productId)
+    async addToWishlist(product) {
+      try {
+        await axiosClient.post('/wishlist', { product_id: product.id })
+        this.wishlistItems.push(product)
+       
+      } catch (err) {
+        if (err.response?.status === 409) {
+          toast.error('Already in wishlist')
+        } else {
+          toast.error('Failed to add to wishlist')
+        }
+      }
     },
 
-    // Toggle wishlist state
-    toggleWishlist(product) {
+    async removeFromWishlist(productId) {
+      try {
+        await axiosClient.delete(`/wishlist/${productId}`)
+        this.wishlistItems = this.wishlistItems.filter((p) => p.id !== productId)
+     
+      } catch (err) {
+      
+      }
+    },
+
+    async toggleWishlist(product) {
       const exists = this.wishlistItems.find((p) => p.id === product.id)
       if (exists) {
-        this.removeFromWishlist(product.id)
+        await this.removeFromWishlist(product.id)
       } else {
-        this.addToWishlist(product)
+        await this.addToWishlist(product)
       }
     },
   },
