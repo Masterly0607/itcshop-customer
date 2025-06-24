@@ -1,20 +1,26 @@
 import { defineStore } from 'pinia'
+import axiosClient from '@/axios'
 
 export const useCategoriesStore = defineStore('categories', {
   state: () => ({
-    categoriesList: [
-      { label: 'Phones', icon: 'mobile-alt' },
-      { label: 'Laptops', icon: 'laptop' },
-      { label: 'Cameras', icon: 'camera' },
-      { label: 'Watches', icon: 'clock' },
-      { label: 'Tablets', icon: 'tablet-alt' },
-      { label: 'Headphones', icon: 'headphones' },
-      { label: 'Gaming', icon: 'gamepad' },
-      { label: 'TVs', icon: 'tv' },
-      { label: 'Speakers', icon: 'volume-up' },
-      { label: 'Accessories', icon: 'plug' },
-      { label: 'Drones', icon: 'helicopter' },
-      { label: 'Printers', icon: 'print' },
-    ],
+    categoriesList: [],
+    loading: false,
   }),
+
+  actions: {
+    async fetchCategories() {
+      this.loading = true
+      try {
+        const res = await axiosClient.get('/categories')
+       this.categoriesList = res.data.map(cat => ({
+  label: cat.name,
+  id: cat.id,
+}))
+      } catch (error) {
+        console.error('❌ Failed to load categories:', error)
+      } finally {
+        this.loading = false
+      }
+    },
+  },
 })

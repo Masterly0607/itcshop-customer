@@ -12,8 +12,11 @@
 import { onMounted } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
 
+
 const authStore = useAuthStore()
 onMounted(() => {
   authStore.init() // 👈 this sets token + customer from sessionStorage
 })
+
+
 </script>

@@ -34,7 +34,7 @@ export const useAuthStore = defineStore('auth', {
 
 
     async register(payload) {
-      await axiosClient.post('/customer/register', payload)
+      await axiosClient.post('/register', payload)
       this.pendingEmail = payload.email
       localStorage.setItem('pendingEmail', payload.email)
       this.startResendCooldown()
@@ -43,7 +43,7 @@ export const useAuthStore = defineStore('auth', {
 
     async verifyOtp({ otp }) {
       const payload = { email: this.pendingEmail, otp }
-      const response = await axiosClient.post('/customer/verify-otp', payload)
+      const response = await axiosClient.post('/verify-otp', payload)
 
       this.token = response.data.token
       this.customer = response.data.customer
@@ -55,7 +55,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async login(email, password) {
-      const response = await axiosClient.post('/customer/login', { email, password })
+      const response = await axiosClient.post('/login', { email, password })
       this.token = response.data.token
       this.customer = response.data.customer
       sessionStorage.setItem('TOKEN', this.token)
@@ -65,7 +65,7 @@ export const useAuthStore = defineStore('auth', {
 
   async loginWithGoogleRedirect() {
   try {
-    const response = await axiosClient.get('/customer/auth/redirect/google')
+    const response = await axiosClient.get('/auth/redirect/google')
     if (response?.data?.url) {
       return response.data.url
     } else {
@@ -86,7 +86,7 @@ export const useAuthStore = defineStore('auth', {
   axiosClient.defaults.headers.common.Authorization = `Bearer ${token}`
 
   try {
-    const res = await axiosClient.get('/customer/profile')
+    const res = await axiosClient.get('/profile')
     this.customer = res.data
     sessionStorage.setItem('CUSTOMER', JSON.stringify(res.data))
 
@@ -124,7 +124,7 @@ export const useAuthStore = defineStore('auth', {
     async updateUser(payload) {
       this.loading = true
       try {
-        const response = await axiosClient.put('/customer/profile', payload)
+        const response = await axiosClient.put('/profile', payload)
         this.customer = response.data.customer
         sessionStorage.setItem('CUSTOMER', JSON.stringify(this.customer))
       } catch (error) {
@@ -138,7 +138,7 @@ export const useAuthStore = defineStore('auth', {
     async changePassword(payload) {
       this.loading = true
       try {
-        const response = await axiosClient.put('/customer/change-password', payload)
+        const response = await axiosClient.put('/change-password', payload)
         return response.data
       } catch (error) {
         console.error('Password change failed', error)
@@ -150,7 +150,7 @@ export const useAuthStore = defineStore('auth', {
 
     async sendForgotOtp(email) {
       try {
-        const res = await axiosClient.post('/customer/forgot-password/send-otp', { email })
+        const res = await axiosClient.post('/forgot-password/send-otp', { email })
         toast.success(res.data.message)
         this.pendingEmail = email
         localStorage.setItem('pendingEmail', email)
@@ -165,7 +165,7 @@ export const useAuthStore = defineStore('auth', {
     async verifyForgotOtp({ otp }) {
       try {
         const payload = { email: this.pendingEmail, otp }
-        await axiosClient.post('/customer/forgot-password/verify-otp', payload)
+        await axiosClient.post('/forgot-password/verify-otp', payload)
         localStorage.setItem('resetOtp', otp)
       } catch (err) {
         throw err
@@ -176,7 +176,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         payload.email = this.pendingEmail
         payload.otp = localStorage.getItem('resetOtp')
-        const res = await axiosClient.post('/customer/forgot-password/reset', payload)
+        const res = await axiosClient.post('/forgot-password/reset', payload)
         toast.success(res.data.message)
         localStorage.removeItem('pendingEmail')
         localStorage.removeItem('resetOtp')
@@ -189,7 +189,7 @@ export const useAuthStore = defineStore('auth', {
 
     async resendOtp({ email }) {
       try {
-        const res = await axiosClient.post('/customer/resend-otp', { email })
+        const res = await axiosClient.post('/resend-otp', { email })
         toast.success(res.data.message)
         this.startResendCooldown()
       } catch (err) {

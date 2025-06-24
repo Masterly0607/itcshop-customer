@@ -4,15 +4,15 @@
       :to="{
         name: 'ProductDetail',
         params: { id: product.id },
-        query: {
-          category: product.category,
-          name: product.name,
-        },
+   query: {
+  category: product.category?.name ?? '',
+  name: product.title
+}
       }"
     >
       <figure>
         <img
-          :src="product.img || defaultImage"
+          :src="product.image || defaultImage"
           :alt="product.name"
           class="w-full h-40 object-cover"
         />

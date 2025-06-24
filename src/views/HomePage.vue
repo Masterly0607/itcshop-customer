@@ -135,9 +135,10 @@
           }"
           class="w-full"
         >
-          <SwiperSlide v-for="product in products">
-            <CardComponent :key="product.id" :product="product" />
-          </SwiperSlide>
+      <SwiperSlide v-for="product in products" :key="product.id">
+  <CardComponent :product="product" />
+</SwiperSlide>
+
         </Swiper>
       </div>
 
@@ -404,7 +405,7 @@
 </template>
 <script setup>
 import CardComponent from '@/components/core/CardComponent.vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { EffectFade, Pagination, Autoplay, Navigation } from 'swiper/modules'
 import 'swiper/css'
@@ -419,11 +420,12 @@ import CategoryComponent from '@/components/core/CategoryComponent.vue'
 import { useCategoriesStore } from '@/stores/categoriesStore'
 // Using products from pinia
 const productsStore = useProductsStore()
-const products = productsStore.productsList
+const products = computed(() => productsStore.productsList || [])
 
 // Using categories form pinia
 const categoriesStore = useCategoriesStore()
-const categories = categoriesStore.categoriesList
+const categories = computed(() => categoriesStore.categoriesList || [])
+
 
 // Make
 const scrollToTop = () => {
@@ -539,8 +541,13 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 
 onMounted(() => {
+  productsStore.fetchProducts()
+  categoriesStore.fetchCategories?.() // only if needed
+  updateCountdown()
+  setInterval(updateCountdown, 1000)
   AOS.init({})
 })
+
 </script>
 
 <style>

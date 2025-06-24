@@ -19,4 +19,5 @@
 <script setup>
 import CustomerFooter from '@/components/FooterComponent.vue'
 import CustomerNavBar from '@/components/NavbarComponent.vue'
+
 </script>

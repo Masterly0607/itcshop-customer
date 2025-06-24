@@ -62,13 +62,17 @@ const route = useRoute()
 const router = useRouter()
 const productsStore = useProductsStore()
 const categoriesStore = useCategoriesStore()
-const categories = categoriesStore.categoriesList
+const categories = computed(() => categoriesStore.categoriesList)
 
-// Fetch all products on load
 onMounted(async () => {
-  await productsStore.fetchProducts()
-  console.log(productsStore.productsList) //  Check browser console!
+  await Promise.all([
+    categoriesStore.fetchCategories(),
+    productsStore.fetchProducts(),
+  ])
 })
+
+
+
 
 // Sync search query from URL
 const searchQuery = ref(route.query.search || '')

@@ -1,54 +1,38 @@
-// src/stores/products/productsStore.js
+// src/stores/productsStore.js
 import { defineStore } from 'pinia'
 import axiosClient from '@/axios'
+
 export const useProductsStore = defineStore('products', {
   state: () => ({
     productsList: [],
-    productDetail: null,
+    productDetail: null,     
     loading: false,
   }),
+
   actions: {
     async fetchProducts() {
+      this.loading = true
       try {
-        this.loading = true
-        const res = await axiosClient.get('/customer/products')
-        this.productsList = res.data.data
-      } catch (err) {
-        console.error('Failed to load products:', err)
+        const response = await axiosClient.get('/products')
+        this.productsList = response.data.data 
+      } catch (error) {
+        console.error('Failed to fetch products:', error)
       } finally {
         this.loading = false
       }
     },
 
+    // ✅ Add this new action
     async fetchProductDetail(id) {
+      this.loading = true
       try {
-        this.loading = true
-        const res = await axiosClient.get(`/customer/products/${id}`)
+        const res = await axiosClient.get(`/products/${id}`)
         this.productDetail = res.data.data
-      } catch (err) {
-        console.error('Failed to fetch product detail:', err)
+      } catch (error) {
+        console.error('Failed to fetch product detail:', error)
       } finally {
         this.loading = false
       }
-    },
-    async fetchFlashSale() {
-      const res = await axiosClient.get('/customer/products/flash-sale')
-      this.productsList = res.data.data
-    },
-
-    async fetchBestSelling() {
-      const res = await axiosClient.get('/customer/products/best-selling')
-      this.productsList = res.data.data
-    },
-
-    async fetchNewProducts() {
-      const res = await axiosClient.get('/customer/products/new')
-      this.productsList = res.data.data
-    },
-
-    async fetchByCategory(categoryName) {
-      const res = await axiosClient.get(`/customer/products/${categoryName}`)
-      this.productsList = res.data.data
     },
   },
 })
