@@ -49,7 +49,7 @@
           <div class="text-sm">Subtotal: <strong>${{ subtotal }}</strong></div>
           <div class="text-sm">Shipping: <strong>Free</strong></div>
           <div class="text-md font-semibold">Total: <strong>${{ subtotal }}</strong></div>
-          <button class="btn btn-primary text-white mt-2">Proceed to Checkout</button>
+          <button class="btn btn-primary text-white mt-2"  @click="goToCheckout">Proceed to Checkout</button>
         </div>
       </div>
     </div>
@@ -60,17 +60,24 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { useCartStore } from '@/stores/cartStore'
 
+// Variables
 const cartStore = useCartStore()
+const router = useRouter()
 
+// Functions
 const updateQty = (item) => {
   cartStore.updateQuantity(item.id, item.quantity)
 }
-
 const subtotal = computed(() => {
   return cartStore.cartItems
     .reduce((sum, item) => sum + Number(item.price) * item.quantity, 0)
     .toFixed(2)
 })
+const goToCheckout = () => {
+  router.push({ name: 'Checkout' }) // route name must match
+}
+
 </script>
