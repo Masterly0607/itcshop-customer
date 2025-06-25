@@ -14,7 +14,7 @@
         <swiper-slide
           v-for="photo in sildePhotos"
           :key="photo"
-          class="relative w-full h-full max-w-screen-xl"
+          class="relative w-full h-full"
         >
           <img :src="`/img/slide/${photo}`" alt="Slide image" class="w-full h-full object-cover" />
           <div class="absolute bottom-[40%] left-6 sm:left-10">
