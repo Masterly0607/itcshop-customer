@@ -1,146 +1,151 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    // Customer Routes
     {
       path: '/',
-      component: () => import('@/layouts/CustomerLayout.vue'),
+      component: () => import('@/layouts/DefaultLayout.vue'),
       children: [
-        { path: '', name: 'Home', component: () => import('@/views/customer/pages/HomePage.vue') },
-        {
-          path: 'shop',
-          name: 'Shop',
-          component: () => import('@/views/customer/pages/ShopPage.vue'),
-        },
+        { path: '', name: 'Home', component: () => import('@/views/HomePage.vue') },
+        { path: 'shop', name: 'Shop', component: () => import('@/views/ProductListPage.vue') },
         {
           path: 'product/:id',
           name: 'ProductDetail',
-          component: () => import('@/views/customer/pages/ProductDetailPage.vue'),
+          component: () => import('@/views/ProductDetailPage.vue'),
         },
         {
-          path: '/products',
-          name: 'ProductsByCategory',
-          component: () => import('@/views/customer/components/common/ProductsByCategoryPage.vue'),
+          path: '/products/category/:categoryName',
+          name: 'CategoryPage',
+          component: () => import('@/views/CategoryPage.vue'),
         },
         {
           path: 'cart',
           name: 'Cart',
-          component: () => import('@/views/customer/pages/CartPage.vue'),
+          component: () => import('@/views/CartPage.vue'),
+          meta: { requiresAuth: true },
         },
         {
           path: 'checkout',
           name: 'Checkout',
-          component: () => import('@/views/customer/pages/CheckOutPage.vue'),
+          component: () => import('@/views/CheckOutPage.vue'),
+          meta: { requiresAuth: true },
         },
         {
-          path: 'orders',
+          path: 'order-history',
           name: 'OrderHistory',
-          component: () => import('@/views/customer/pages/OrderHistoryPage.vue'),
+          component: () => import('@/views/OrderHistoryPage.vue'),
+          meta: { requiresAuth: true },
         },
         {
           path: 'wishlist',
           name: 'WishList',
-          component: () => import('@/views/customer/pages/WishListPage.vue'),
+          component: () => import('@/views/WishListPage.vue'),
+          meta: { requiresAuth: true },
         },
-        {
-          path: 'account',
-          name: 'AccountDashboard',
-          component: () => import('@/views/customer/pages/AccountDashboardPage.vue'),
-        },
-        {
-          path: 'about-us',
-          name: 'AboutUs',
-          component: () => import('@/views/customer/pages/AboutUsPage.vue'),
-        },
+        { path: 'about-us', name: 'AboutUs', component: () => import('@/views/AboutUsPage.vue') },
         {
           path: 'contact-us',
           name: 'ContactUs',
-          component: () => import('@/views/customer/pages/ContactUsPage.vue'),
-        },
-        {
-          path: '/order-confirmation/:orderId',
-          name: 'OrderConfirmation',
-          component: () => import('@/views/customer/pages/OrderConfirmation.vue'),
+          component: () => import('@/views/ContactUsPage.vue'),
         },
       ],
     },
 
-    // Customer Auth Routes
+    // Customer Account (Dashboard)
     {
-      path: '/',
-      component: () => import('@/layouts/AdminLayout.vue'),
-      children: [
-        {
-          path: '/login',
-          name: 'Login',
-          component: () => import('@/views/customer/pages/auth/LoginPage.vue'),
-        },
-        {
-          path: '/signup',
-          name: 'Signup',
-          component: () => import('@/views/customer/pages/auth/SignUpPage.vue'),
-        },
-        {
-          path: '/forgot-password',
-          name: 'ForgotPassword',
-          component: () => import('@/views/customer/pages/auth/ForgotPasswordPage.vue'),
-        },
-        {
-          path: '/reset-password',
-          name: 'ResetPassword',
-          component: () => import('@/views/customer/pages/auth/ResetPasswordPage.vue'),
-        },
-        {
-          path: '/verify-email',
-          name: 'VerifyEmail',
-          component: () => import('@/views/customer/pages/auth/VerifyEmailPage.vue'),
-        },
-      ],
-    },
-
-    //Admin Routes
-    {
-      path: '/admin',
-      component: () => import('@/layouts/AdminLayout.vue'),
+      path: '/account',
+      component: () => import('@/layouts/DashboardLayout.vue'),
       children: [
         {
           path: '',
-          name: 'AdminDashboard',
-          component: () => import('@/views/admin/pages/AdminDashboardPage.vue'),
-        },
-        {
-          path: 'users',
-          name: 'AdminUsers',
-          component: () => import('@/views/admin/pages/AdminUsersPage.vue'),
-        },
-        {
-          path: 'products',
-          name: 'AdminProducts',
-          component: () => import('@/views/admin/pages/AdminProductsPage.vue'),
-        },
-        {
-          path: 'categories',
-          name: 'AdminCategories',
-          component: () => import('@/views/admin/pages/AdminCategoriesPage.vue'),
-        },
-        {
-          path: 'coupons',
-          name: 'AdminCoupons',
-          component: () => import('@/views/admin/pages/AdminCouponsPage.vue'),
-        },
-        {
-          path: 'settings',
-          name: 'AdminSettings',
-          component: () => import('@/views/admin/pages/AdminSettingsPage.vue'),
+          name: 'AccountDashboard',
+          component: () => import('@/views/AccountDashboardPage.vue'),
+          meta: { requiresAuth: true },
         },
       ],
     },
 
-    // // NotFound Page
-    { path: '/:pathMatch(.*)*', name: 'NotFound', component: () => import('@/NotFoundPage.vue') },
+    //  Standalone route (order confirmation)
+    {
+      path: '/order-confirmation/:orderId',
+      component: () => import('@/layouts/EmptyLayout.vue'),
+      children: [
+        {
+          path: '',
+          name: 'OrderConfirmation',
+          component: () => import('@/views/OrderConfirmation.vue'),
+          meta: { requiresAuth: true },
+        },
+      ],
+    },
+
+    // Auth Routes
+    {
+      path: '/auth',
+      component: () => import('@/layouts/AuthLayout.vue'),
+      children: [
+        {
+          path: 'login',
+          name: 'Login',
+          component: () => import('@/views/auth/LoginPage.vue'),
+          meta: { requiresGuest: true },
+        },
+        {
+          path: 'signup',
+          name: 'Signup',
+          component: () => import('@/views/auth/SignUpPage.vue'),
+          meta: { requiresGuest: true },
+        },
+        {
+          path: 'forgot-password',
+          name: 'ForgotPassword',
+          component: () => import('@/views/auth/ForgotPasswordPage.vue'),
+          meta: { requiresGuest: true },
+        },
+        {
+          path: 'reset-password',
+          name: 'ResetPassword',
+          component: () => import('@/views/auth/ResetPasswordPage.vue'),
+          meta: { requiresGuest: true },
+        },
+        {
+          path: 'verify-email',
+          name: 'VerifyEmail',
+          component: () => import('@/views/auth/VerifyEmailPage.vue'),
+          meta: { requiresGuest: true },
+        },
+{
+  path: 'google-success',
+  name: 'GoogleSuccess',
+  component: () => import('@/views/auth/GoogleSuccessPage.vue'),
+  meta: { requiresGuest: true },
+},
+
+      ],
+    },
+
+    // 404 Not Found
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: () => import('@/NotFoundPage.vue'),
+    },
   ],
+})
+
+// Route Guard
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore()
+
+  if (to.meta.requiresAuth && !authStore.token) {
+    next({ name: 'Login' })
+  } else if (to.meta.requiresGuest && authStore.token) {
+    next({ name: 'Home' })
+  } else {
+    next()
+  }
 })
 
 export default router

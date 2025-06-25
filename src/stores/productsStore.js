@@ -1,80 +1,38 @@
-// src/stores/products/productsStore.js
+// src/stores/productsStore.js
 import { defineStore } from 'pinia'
+import axiosClient from '@/axios'
 
 export const useProductsStore = defineStore('products', {
   state: () => ({
-    productsList: [
-      {
-        id: 1,
-        name: 'Laptop',
-        category: 'Phones',
-        price: 1000,
-        oldPrice: 100,
-        img: '/img/keyboard.png',
-        rating: '4',
-      },
-      {
-        id: 2,
-        name: 'Shirt',
-        category: 'Laptops',
-        price: 20,
-        img: '/img/keyboard.png',
-        rating: '4',
-      },
-      {
-        id: 3,
-        name: 'Blender',
-        category: 'Smartwatches',
-        price: 50,
-        oldPrice: 100,
-        img: '/img/keyboard.png',
-        rating: '4',
-      },
-      {
-        id: 4,
-        name: 'Book',
-        category: 'Books',
-        price: 10,
-        oldPrice: 100,
-        img: '/img/keyboard.png',
-        rating: '4',
-      },
-      {
-        id: 5,
-        name: 'Laptop',
-        category: 'Electronics',
-        price: 1000,
-        oldPrice: 100,
-        img: '/img/keyboard.png',
-        rating: '4',
-      },
-      {
-        id: 6,
-        name: 'Shirt',
-        category: 'Clothing',
-        price: 20,
-        oldPrice: 100,
-        img: '/img/keyboard.png',
-        rating: '4',
-      },
-      {
-        id: 7,
-        name: 'Blender',
-        category: 'Home Appliances',
-        price: 50,
-        oldPrice: 100,
-        img: '/img/keyboard.png',
-        rating: '4',
-      },
-      {
-        id: 8,
-        name: 'Book',
-        category: 'Books',
-        price: 10,
-        oldPrice: 100,
-        img: '/img/keyboard.png',
-        rating: '4',
-      },
-    ],
+    productsList: [],
+    productDetail: null,     
+    loading: false,
   }),
+
+  actions: {
+    async fetchProducts() {
+      this.loading = true
+      try {
+        const response = await axiosClient.get('/products')
+        this.productsList = response.data.data 
+      } catch (error) {
+        console.error('Failed to fetch products:', error)
+      } finally {
+        this.loading = false
+      }
+    },
+
+    // ✅ Add this new action
+    async fetchProductDetail(id) {
+      this.loading = true
+      try {
+        const res = await axiosClient.get(`/products/${id}`)
+        this.productDetail = res.data.data
+      } catch (error) {
+        console.error('Failed to fetch product detail:', error)
+      } finally {
+        this.loading = false
+      }
+    },
+  },
 })
