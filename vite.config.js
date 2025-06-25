@@ -13,11 +13,8 @@ export default defineConfig({
     tailwindcss(),
     vueJsx()
   ],
-   server: {
-    https: {
-      key: fs.readFileSync('./localhost-key.pem'),
-      cert: fs.readFileSync('./localhost.pem'),
-    },
+  server: {
+    https: false, // 👈 disable for Stripe dev
     host: 'localhost',
     port: 5174,
   },

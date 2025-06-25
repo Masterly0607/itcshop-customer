@@ -8,7 +8,6 @@
     <div class="flex items-start gap-10">
       <div class="w-1/2">
         <!-- Billing Form -->
-        <!-- (You can later bind these inputs to user info if needed) -->
       </div>
 
       <div class="w-1/2">
@@ -24,52 +23,56 @@
             </div>
           </div>
 
-          <!-- Subtotal -->
+          <!-- Totals -->
           <div>
-           <div class="flex justify-between">
-  <span>Subtotal:</span>
-  <span>${{ subtotal.toFixed(2) }}</span>
-</div>
-<!-- Discount -->
+            <div class="flex justify-between">
+              <span>Subtotal:</span>
+              <span>${{ subtotal.toFixed(2) }}</span>
+            </div>
+
             <div class="divider mb-0"></div>
             <div v-if="discount > 0" class="flex justify-between text-red-500">
-  <span>Discount:</span>
-  <span>- ${{ discount.toFixed(2) }}</span>
-</div>
+              <span>Discount:</span>
+              <span>- ${{ discount.toFixed(2) }}</span>
+            </div>
 
-<!-- Total -->
-<div class="flex justify-between font-bold text-lg">
-  <span>Total:</span>
-  <span>${{ total }}</span>
-</div>
+            <div class="flex justify-between font-bold text-lg">
+              <span>Total:</span>
+              <span>${{ total }}</span>
+            </div>
           </div>
 
-          <!-- Payment Methods -->
+          <!-- Payment -->
           <div class="flex flex-col gap-5">
-            <!-- Card Option -->
             <div class="flex justify-between items-center">
               <label class="label">
-                <input type="radio" class="radio radio-sm text-primary radio-neutral" name="payment" value="cards" v-model="payment" />
+                <input type="radio" class="radio radio-sm" name="payment" value="cards" v-model="payment" />
                 <span class="text-sm">Cards</span>
               </label>
               <div class="flex gap-3">
-                <img src="/img/visa.png" alt="" class="w-8 object-contain" />
-                <img src="/img/mastercard.png" alt="" class="w-8 object-contain" />
+                <img src="/img/visa.png" class="w-8 object-contain" />
+                <img src="/img/mastercard.png" class="w-8 object-contain" />
               </div>
             </div>
 
-            <!-- Card Element -->
-        <div v-if="payment === 'cards'" class="ml-6">
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend p-1 font-medium text-black">Card number</legend>
-    <div id="card-element" class="input bg-white px-3 py-2 border rounded-sm"></div>
-  </fieldset>
-</div>
+            <!-- Stripe Card Input -->
+            <div v-if="showCardElement" class="ml-6 flex flex-col gap-4">
+              <fieldset class="fieldset">
+                <legend class="fieldset-legend p-1 font-medium text-black">Card number</legend>
+                <div id="card-element" class="input bg-white px-3 py-2 border rounded-sm"></div>
+              </fieldset>
 
-            <!-- Cash Option -->
+              <div class="grid grid-cols-3 gap-3">
+                <input type="text" class="input input-bordered" placeholder="MM/YY" disabled value="12/34" />
+                <input type="text" class="input input-bordered" placeholder="CVC" disabled value="123" />
+                <input type="text" class="input input-bordered" placeholder="ZIP Code" disabled value="10001" />
+              </div>
+              <p class="text-xs text-gray-400">Use test card: 4242 4242 4242 4242</p>
+            </div>
+
             <div>
               <label class="label">
-                <input type="radio" class="radio radio-sm text-primary radio-neutral" name="payment" value="cash" v-model="payment" />
+                <input type="radio" class="radio radio-sm" name="payment" value="cash" v-model="payment" />
                 <span class="text-sm">Cash on delivery</span>
               </label>
             </div>
@@ -95,52 +98,65 @@
 
 <script setup>
 import SpinnerComponent from '@/components/core/SpinnerComponent.vue'
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '@/stores/cartStore'
 import axiosClient from '@/axios'
 import { loadStripe } from '@stripe/stripe-js'
 import { toast } from 'vue3-toastify'
 
-// State
-const payment = ref('')
+const router = useRouter()
+const cartStore = useCartStore()
+
+const payment = ref('cards')
+const showCardElement = ref(false)
 const isPlacingOrder = ref(false)
 const couponCode = ref('')
 const discount = ref(0)
 const subtotal = ref(0)
 const total = computed(() => (subtotal.value - discount.value).toFixed(2))
 
-const router = useRouter()
-const cartStore = useCartStore()
-
-// Stripe setup
 let stripe = null
 let cardElement = null
+
+const mountStripeCardElement = async () => {
+  await nextTick()
+  const container = document.getElementById('card-element')
+  if (container && container.children.length === 0) {
+    const elements = stripe.elements()
+    cardElement = elements.create('card')
+    cardElement.mount(container)
+  }
+}
 
 onMounted(async () => {
   stripe = await loadStripe('pk_test_51RbecvH7SnJ8RHsT0gzUgSxjgPfqncDGgVML8bkoXU2IakPMjbZUdeymF2itM3Z3njpPtT6RWMZLC1Yu6Elun1Sg00B5lVHEZb')
 
-  // Calculate initial subtotal
   subtotal.value = cartStore.cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
-  // Mount Stripe element
-  watch(payment, (newValue) => {
-    if (newValue === 'cards' && !cardElement) {
-      const elements = stripe.elements()
-      cardElement = elements.create('card')
-      setTimeout(() => {
-        const container = document.getElementById('card-element')
-        if (container) {
-          cardElement.mount('#card-element')
-        } else {
-          toast.error('Card input not found. Try again.')
-        }
-      }, 0)
-    }
-  })
+  const savedCoupon = sessionStorage.getItem('COUPON')
+  if (savedCoupon) {
+    const parsed = JSON.parse(savedCoupon)
+    couponCode.value = parsed.code
+    discount.value = parsed.discount
+    subtotal.value = parsed.subtotal
+  }
+
+  if (payment.value === 'cards') {
+    showCardElement.value = true
+    await mountStripeCardElement()
+  }
 })
 
-// Apply coupon logic
+watch(payment, async (newVal) => {
+  if (newVal === 'cards') {
+    showCardElement.value = true
+    await mountStripeCardElement()
+  } else {
+    showCardElement.value = false
+  }
+})
+
 const applyCoupon = async () => {
   try {
     const res = await axiosClient.post('/cart/apply-coupon', {
@@ -151,13 +167,18 @@ const applyCoupon = async () => {
     subtotal.value = res.data.subtotal
     discount.value = res.data.discount
 
+    sessionStorage.setItem('COUPON', JSON.stringify({
+      code: couponCode.value,
+      discount: res.data.discount,
+      subtotal: res.data.subtotal
+    }))
+
     toast.success('Coupon applied successfully!')
   } catch (err) {
     toast.error(err.response?.data?.message || 'Failed to apply coupon')
   }
 }
 
-// Place order and pay with Stripe
 const placeOrder = async () => {
   if (payment.value !== 'cards') {
     toast.error('Please select "Cards" as payment method')
@@ -191,6 +212,7 @@ const placeOrder = async () => {
         status: 'succeeded'
       })
 
+      sessionStorage.removeItem('COUPON')
       toast.success('Payment successful!')
       router.push({ name: 'OrderConfirmation', params: { orderId: res.data.order_id } })
     }
@@ -202,5 +224,3 @@ const placeOrder = async () => {
   }
 }
 </script>
-
-
