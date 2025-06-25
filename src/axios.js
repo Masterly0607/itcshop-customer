@@ -17,13 +17,16 @@ axiosClient.interceptors.request.use((config) => {
 axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const isProtectedRoute = router.currentRoute.value.meta.requiresAuth
+
+    if (error.response?.status === 401 && isProtectedRoute) {
       sessionStorage.removeItem('TOKEN')
       sessionStorage.removeItem('CUSTOMER')
       router.push({ name: 'Login' })
     }
+
     throw error
-  },
+  }
 )
 
 // Why axiosClient.interceptors.response.use? (Real world example)

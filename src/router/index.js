@@ -4,7 +4,6 @@ import { useAuthStore } from '@/stores/authStore'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    // 🏠 Main Public & Customer Pages
     {
       path: '/',
       component: () => import('@/layouts/DefaultLayout.vue'),
@@ -21,10 +20,6 @@ const router = createRouter({
           name: 'CategoryPage',
           component: () => import('@/views/CategoryPage.vue'),
         },
-        // { path: '/products/flash-sale', component: FlashSalePage },
-        // { path: '/products/best-selling', component: BestSellingPage },
-        // { path: '/products/new', component: NewProductsPage },
-        // { path: '/search', component: SearchResultsPage },
         {
           path: 'cart',
           name: 'Cart',
@@ -58,7 +53,7 @@ const router = createRouter({
       ],
     },
 
-    // 👤 Customer Account (Dashboard)
+    // Customer Account (Dashboard)
     {
       path: '/account',
       component: () => import('@/layouts/DashboardLayout.vue'),
@@ -72,7 +67,7 @@ const router = createRouter({
       ],
     },
 
-    // ✅ Standalone route (order confirmation)
+    //  Standalone route (order confirmation)
     {
       path: '/order-confirmation/:orderId',
       component: () => import('@/layouts/EmptyLayout.vue'),
@@ -86,7 +81,7 @@ const router = createRouter({
       ],
     },
 
-    // 🔐 Auth Routes
+    // Auth Routes
     {
       path: '/auth',
       component: () => import('@/layouts/AuthLayout.vue'),
@@ -140,7 +135,7 @@ const router = createRouter({
   ],
 })
 
-// 🔐 Route Guard
+// Route Guard
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
 

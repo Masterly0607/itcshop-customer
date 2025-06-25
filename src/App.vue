@@ -12,8 +12,11 @@ const wishlistStore = useWishlistStore()
 const cartStore = useCartStore()
 
 onMounted(() => {
-  wishlistStore.fetchWishlist()
-  cartStore.fetchCart()
+  const token = sessionStorage.getItem('TOKEN')
+  if (token) {
+    wishlistStore.fetchWishlist()
+    cartStore.fetchCart()
+  }
 })
 
 
