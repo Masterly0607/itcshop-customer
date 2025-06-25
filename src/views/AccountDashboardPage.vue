@@ -1,7 +1,9 @@
 <template>
   <section>
     <SpinnerComponent :show="loading" />
-
+<div>
+  <BackButton/>
+</div>
     <div class="flex justify-between">
       <div class="font-bold text-2xl text-primary">My Account</div>
       <div class="text-sm">
@@ -162,6 +164,7 @@ import SpinnerComponent from '@/components/core/SpinnerComponent.vue'
 import OrderHistoryPage from './OrderHistoryPage.vue'
 import { useAuthStore } from '@/stores/authStore'
 import { toast } from 'vue3-toastify'
+import BackButton from '@/components/core/BackButton.vue'
 
 const authStore = useAuthStore()
 const loading = ref(false)

@@ -1,6 +1,8 @@
 <template>
   <section class="container-default mt-5">
-    <div class="page-title">Order History</div>
+  
+
+    <div class="page-title text-center">Order History</div>
 
     <div v-if="orders.length > 0" class="space-y-6">
       <div v-for="order in orders" :key="order.id" class="rounded-lg shadow-lg p-5 bg-gray-50">
