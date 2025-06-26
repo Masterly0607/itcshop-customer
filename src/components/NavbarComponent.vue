@@ -225,6 +225,6 @@ const authStore = useAuthStore()
 
 const logout = () => {
   authStore.logout()
-  router.push({ name: 'Home' })
+  router.push({ name: 'Signup' })
 }
 </script>

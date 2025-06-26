@@ -247,111 +247,34 @@
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-10">
-        <CardComponent v-for="product in products" :key="product.id" :product="product" />
+      <CardComponent v-for="product in bestSelling" :key="product.id" :product="product" />
+
       </div>
 
       <div class="divider mt-15"></div>
     </section>
 
-    <!-- New Arrival -->
-    <section
-      class="container-default mt-20"
-      data-aos="flip-up"
-      data-aos-delay="500"
-      data-aos-duration="1000"
-    >
-      <SectionHeader title="Featured" />
-      <span class="section-title">New Arrival</span>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 h-[500px] mt-10">
-        <div class="bg-red-200 relative">
-          <img
-            src="/img/products/watch.jpg"
-            alt="Play Station"
-            srcset=""
-            class="absolute inset-0 w-full h-full object-cover"
-          />
-          <div class="absolute bottom-5 left-10">
-            <div class="text-xl font-bold">Lorem, ipsum dolor.</div>
-            <div class="text-sm">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur, quisquam!
-            </div>
 
-            <div>
-              <RouterLink :to="{ name: 'Shop' }">
-                <span class="underline"> Shop Now </span>
-              </RouterLink>
-            </div>
-          </div>
-        </div>
+ <!-- New Arrival -->
+<section
+  class="container-default mt-20"
+  data-aos="flip-up"
+  data-aos-delay="500"
+  data-aos-duration="1000"
+>
+  <SectionHeader title="Featured" />
+  <span class="section-title">New Arrival</span>
 
-        <div>
-          <div class="grid grid-row-2 gap-4">
-            <div class="bg-red-200 h-[250px] relative">
-              <img
-                src="/img/slide/2.avif"
-                alt="Play Station"
-                srcset=""
-                class="absolute inset-0 w-full h-full object-cover"
-              />
-              <div class="absolute bottom-5 left-10 text-white">
-                <div class="text-xl font-bold">Lorem, ipsum dolor.</div>
-                <div class="text-sm">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur, quisquam!
-                </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-10">
+   <CardComponent v-for="product in newArrival" :key="product.id" :product="product" />
 
-                <div>
-                  <RouterLink :to="{ name: 'Shop' }">
-                    <span class="underline"> Shop Now </span>
-                  </RouterLink>
-                </div>
-              </div>
-            </div>
-            <div class="grid grid-cols-2 gap-4 h-[250px]">
-              <div class="bg-green-200 relative">
-                <img
-                  src="/img/slide/2.avif"
-                  alt="Play Station"
-                  srcset=""
-                  class="absolute inset-0 w-full h-full object-cover"
-                />
-                <div class="absolute bottom-5 left-10 text-white">
-                  <div class="text-xl font-bold">Lorem, ipsum dolor.</div>
-                  <div class="text-sm">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur, quisquam!
-                  </div>
+  </div>
 
-                  <div>
-                    <RouterLink :to="{ name: 'Shop' }">
-                      <span class="underline"> Shop Now </span>
-                    </RouterLink>
-                  </div>
-                </div>
-              </div>
-              <div class="bg-green-200 relative">
-                <img
-                  src="/img/slide/2.avif"
-                  alt="Play Station"
-                  srcset=""
-                  class="absolute inset-0 w-full h-full object-cover"
-                />
-                <div class="absolute bottom-5 left-10 text-white">
-                  <div class="text-xl font-bold">Lorem, ipsum dolor.</div>
-                  <div class="text-">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur, quisquam!
-                  </div>
+  <div class="text-center mt-10">
+    <div class="btn btn-primary text-white btn-wide" @click="goToShop">View All Products</div>
+  </div>
+</section>
 
-                  <div>
-                    <RouterLink :to="{ name: 'Shop' }">
-                      <span class="underline"> Shop Now </span>
-                    </RouterLink>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- Explore Our Products -->
     <section
@@ -412,29 +335,39 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
 import 'swiper/css/effect-fade'
+
 import { useProductsStore } from '/src/stores/productsStore.js'
 import { useRouter } from 'vue-router'
 import SectionHeader from '@/components/core/SectionHeader.vue'
 import { TruckIcon, LifebuoyIcon, ShieldCheckIcon } from '@heroicons/vue/24/outline'
 import CategoryComponent from '@/components/core/CategoryComponent.vue'
 import { useCategoriesStore } from '@/stores/categoriesStore'
-// Using products from pinia
-const productsStore = useProductsStore()
-const products = computed(() => productsStore.productsList || [])
 
-// Using categories form pinia
+// Store
+const productsStore = useProductsStore()
 const categoriesStore = useCategoriesStore()
+
+// Computed Products
+const products = computed(() => productsStore.productsList || [])
+const flashSale = computed(() => productsStore.flashSaleProducts || [])
+const bestSelling = computed(() => productsStore.bestSellingProducts || [])
+const newArrival = computed(() => productsStore.newArrivalProducts || [])
 const categories = computed(() => categoriesStore.categoriesList || [])
 
-
-// Make
-const scrollToTop = () => {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth',
-  })
+// Router
+const route = useRouter()
+const goToShop = () => route.push({ name: 'Shop' })
+const goToCategory = (category) => {
+  route.push({ name: 'Shop', query: { category: category.label } })
 }
 
+// Scroll Top
+const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
+
+// Slide Images
+const sildePhotos = ['1.jpg', '2.avif', '3.jpg', '4.jpg']
+
+// Features
 const features = [
   {
     title: 'FREE AND FAST DELIVERY',
@@ -453,11 +386,23 @@ const features = [
   },
 ]
 
-// Router
-const route = useRouter()
-const goToShop = () => route.push({ name: 'Shop' })
+// Countdown for flash sale
+const targetDate = new Date()
+targetDate.setDate(targetDate.getDate() + 15)
 
-// Flash Sale Swiper
+const days = ref(0), hours = ref(0), minutes = ref(0), seconds = ref(0)
+const pad = (num) => (num < 10 ? `0${num}` : num > 99 ? 99 : num)
+const updateCountdown = () => {
+  const now = new Date()
+  const diff = targetDate - now
+  if (diff <= 0) return
+  days.value = Math.floor(diff / (1000 * 60 * 60 * 24))
+  hours.value = Math.floor((diff / (1000 * 60 * 60)) % 24)
+  minutes.value = Math.floor((diff / (1000 * 60)) % 60)
+  seconds.value = Math.floor((diff / 1000) % 60)
+}
+
+// Flash sale swiper
 const swiperInstance = ref(null)
 const isBeginning = ref(true)
 const isEnd = ref(false)
@@ -472,16 +417,10 @@ const updateArrowState = (swiper) => {
   isBeginning.value = swiper.isBeginning
   isEnd.value = swiper.isEnd
 }
-const goNext = () => {
-  swiperInstance.value?.slideNext()
-  updateArrowState(swiperInstance.value)
-}
-const goPrev = () => {
-  swiperInstance.value?.slidePrev()
-  updateArrowState(swiperInstance.value)
-}
+const goNext = () => swiperInstance.value?.slideNext()
+const goPrev = () => swiperInstance.value?.slidePrev()
 
-// Category Swiper
+// Category swiper
 const categorySwiper = ref(null)
 const isCatBeginning = ref(true)
 const isCatEnd = ref(false)
@@ -496,59 +435,26 @@ const updateCategoryArrowState = (swiper) => {
   isCatBeginning.value = swiper.isBeginning
   isCatEnd.value = swiper.isEnd
 }
-const goCategoryNext = () => {
-  categorySwiper.value?.slideNext()
-  updateCategoryArrowState(categorySwiper.value)
-}
-const goCategoryPrev = () => {
-  categorySwiper.value?.slidePrev()
-  updateCategoryArrowState(categorySwiper.value)
-}
+const goCategoryNext = () => categorySwiper.value?.slideNext()
+const goCategoryPrev = () => categorySwiper.value?.slidePrev()
 
-// Data
-const sildePhotos = ['1.jpg', '2.avif', '3.jpg', '4.jpg']
-
-// Countdown
-const targetDate = new Date()
-targetDate.setDate(targetDate.getDate() + 15)
-const days = ref(0),
-  hours = ref(0),
-  minutes = ref(0),
-  seconds = ref(0)
-const pad = (num) => (num < 10 ? `0${num}` : num > 99 ? 99 : num)
-const updateCountdown = () => {
-  const now = new Date()
-  const diff = targetDate - now
-  if (diff <= 0) return
-  days.value = Math.floor(diff / (1000 * 60 * 60 * 24))
-  hours.value = Math.floor((diff / (1000 * 60 * 60)) % 24)
-  minutes.value = Math.floor((diff / (1000 * 60)) % 60)
-  seconds.value = Math.floor((diff / 1000) % 60)
-}
-onMounted(() => {
-  updateCountdown()
-  setInterval(updateCountdown, 1000)
-})
-
-// How to go to Products by category
-const router = useRouter()
-const goToCategory = (category) => {
-  router.push({ name: 'Shop', query: { category: category.label } })
-}
-
-// Add animation when scrolling using aos library
+// Animation and Data Fetch
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 
 onMounted(() => {
-  productsStore.fetchProducts()
-  categoriesStore.fetchCategories?.() // only if needed
   updateCountdown()
   setInterval(updateCountdown, 1000)
+
+  productsStore.fetchProducts()
+  productsStore.fetchFlashSaleProducts()
+  productsStore.fetchBestSellingProducts()
+  productsStore.fetchNewArrivalProducts()
+  categoriesStore.fetchCategories?.()
   AOS.init({})
 })
-
 </script>
+>
 
 <style>
 .swiper-pagination-bullet {
