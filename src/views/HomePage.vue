@@ -253,105 +253,26 @@
       <div class="divider mt-15"></div>
     </section>
 
-    <!-- New Arrival -->
-    <section
-      class="container-default mt-20"
-      data-aos="flip-up"
-      data-aos-delay="500"
-      data-aos-duration="1000"
-    >
-      <SectionHeader title="Featured" />
-      <span class="section-title">New Arrival</span>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 h-[500px] mt-10">
-        <div class="bg-red-200 relative">
-          <img
-            src="/img/products/watch.jpg"
-            alt="Play Station"
-            srcset=""
-            class="absolute inset-0 w-full h-full object-cover"
-          />
-          <div class="absolute bottom-5 left-10">
-            <div class="text-xl font-bold">Lorem, ipsum dolor.</div>
-            <div class="text-sm">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur, quisquam!
-            </div>
 
-            <div>
-              <RouterLink :to="{ name: 'Shop' }">
-                <span class="underline"> Shop Now </span>
-              </RouterLink>
-            </div>
-          </div>
-        </div>
+ <!-- New Arrival -->
+<section
+  class="container-default mt-20"
+  data-aos="flip-up"
+  data-aos-delay="500"
+  data-aos-duration="1000"
+>
+  <SectionHeader title="Featured" />
+  <span class="section-title">New Arrival</span>
 
-        <div>
-          <div class="grid grid-row-2 gap-4">
-            <div class="bg-red-200 h-[250px] relative">
-              <img
-                src="/img/slide/2.avif"
-                alt="Play Station"
-                srcset=""
-                class="absolute inset-0 w-full h-full object-cover"
-              />
-              <div class="absolute bottom-5 left-10 text-white">
-                <div class="text-xl font-bold">Lorem, ipsum dolor.</div>
-                <div class="text-sm">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur, quisquam!
-                </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-10">
+    <CardComponent v-for="product in newArrival" :key="product.id" :product="product" />
+  </div>
 
-                <div>
-                  <RouterLink :to="{ name: 'Shop' }">
-                    <span class="underline"> Shop Now </span>
-                  </RouterLink>
-                </div>
-              </div>
-            </div>
-            <div class="grid grid-cols-2 gap-4 h-[250px]">
-              <div class="bg-green-200 relative">
-                <img
-                  src="/img/slide/2.avif"
-                  alt="Play Station"
-                  srcset=""
-                  class="absolute inset-0 w-full h-full object-cover"
-                />
-                <div class="absolute bottom-5 left-10 text-white">
-                  <div class="text-xl font-bold">Lorem, ipsum dolor.</div>
-                  <div class="text-sm">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur, quisquam!
-                  </div>
+  <div class="text-center mt-10">
+    <div class="btn btn-primary text-white btn-wide" @click="goToShop">View All Products</div>
+  </div>
+</section>
 
-                  <div>
-                    <RouterLink :to="{ name: 'Shop' }">
-                      <span class="underline"> Shop Now </span>
-                    </RouterLink>
-                  </div>
-                </div>
-              </div>
-              <div class="bg-green-200 relative">
-                <img
-                  src="/img/slide/2.avif"
-                  alt="Play Station"
-                  srcset=""
-                  class="absolute inset-0 w-full h-full object-cover"
-                />
-                <div class="absolute bottom-5 left-10 text-white">
-                  <div class="text-xl font-bold">Lorem, ipsum dolor.</div>
-                  <div class="text-">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur, quisquam!
-                  </div>
-
-                  <div>
-                    <RouterLink :to="{ name: 'Shop' }">
-                      <span class="underline"> Shop Now </span>
-                    </RouterLink>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- Explore Our Products -->
     <section
@@ -426,7 +347,8 @@ const products = computed(() => productsStore.productsList || [])
 const categoriesStore = useCategoriesStore()
 const categories = computed(() => categoriesStore.categoriesList || [])
 
-
+// New arrive products
+const newArrival = computed(() => productsStore.newArrivalProducts || [])
 // Make
 const scrollToTop = () => {
   window.scrollTo({
@@ -528,6 +450,7 @@ const updateCountdown = () => {
 onMounted(() => {
   updateCountdown()
   setInterval(updateCountdown, 1000)
+    productsStore.fetchNewArrivalProducts()
 })
 
 // How to go to Products by category
