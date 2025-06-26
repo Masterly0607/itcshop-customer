@@ -136,6 +136,10 @@ const mountStripeCardElement = async () => {
 
 onMounted(async () => {
   stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || 'pk_test_...')
+
+ 
+  await cartStore.fetchCart()
+
   subtotal.value = cartStore.cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
   const savedCoupon = sessionStorage.getItem('COUPON')
