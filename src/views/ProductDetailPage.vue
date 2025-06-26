@@ -58,7 +58,8 @@ class="w-[80px] h-[80px] object-cover cursor-pointer border"
 
         <!-- Price -->
         <div class="text-lg mt-3 font-semibold">
-          ${{ totalPrice.toLocaleString() }}
+       ${{ totalPrice.toFixed(2) }}
+
         </div>
 
         <!-- Description -->
