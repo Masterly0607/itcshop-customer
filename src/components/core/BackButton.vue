@@ -28,6 +28,6 @@ const props = defineProps({
 })
 
 const goBack = () => {
-  router.back()
+  router.push({ name: 'Home' })
 }
 </script>
