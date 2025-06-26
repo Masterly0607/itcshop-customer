@@ -67,7 +67,12 @@
                 <input type="text" class="input input-bordered" placeholder="CVC" disabled value="123" />
                 <input type="text" class="input input-bordered" placeholder="ZIP Code" disabled value="10001" />
               </div>
-              <p class="text-xs text-gray-400">Use test card: 4242 4242 4242 4242</p>
+
+              <p class="text-xs text-gray-500">
+                💡 Use Stripe test card:
+                <span class="font-mono bg-gray-100 px-1 py-0.5 rounded">4242 4242 4242 4242</span>,
+                Exp: <strong>12/34</strong>, CVC: <strong>123</strong>
+              </p>
             </div>
 
             <div>
@@ -130,8 +135,7 @@ const mountStripeCardElement = async () => {
 }
 
 onMounted(async () => {
-  stripe = await loadStripe('pk_test_51RbecvH7SnJ8RHsT0gzUgSxjgPfqncDGgVML8bkoXU2IakPMjbZUdeymF2itM3Z3njpPtT6RWMZLC1Yu6Elun1Sg00B5lVHEZb')
-
+  stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || 'pk_test_...')
   subtotal.value = cartStore.cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
   const savedCoupon = sessionStorage.getItem('COUPON')
@@ -188,7 +192,7 @@ const placeOrder = async () => {
   try {
     isPlacingOrder.value = true
 
-    const res = await axiosClient.post('/checkout/stripe')
+    const res = await axiosClient.post('/stripe/payment-intent')
     const clientSecret = res.data.client_secret
 
     const result = await stripe.confirmCardPayment(clientSecret, {
