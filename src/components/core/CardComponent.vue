@@ -91,7 +91,10 @@ const cartStore = useCartStore()
 const wishlistStore = useWishlistStore()
 
 // Computed states
-const isInCart = computed(() => cartStore.cartItems.some((item) => item.id === props.product.id))
+const isInCart = computed(() =>
+  cartStore.cartItems.some((item) => item.product_id === props.product.id)
+)
+
 
 const isInWishlist = computed(() =>
   wishlistStore.wishlistItems.some((item) => item.id === props.product.id),
@@ -103,7 +106,7 @@ const handleAddToCart = async () => {
     router.push({ name: 'Cart' })
   } else {
     await cartStore.addToCart(props.product)
-    toast.success(`${props.product.name} added to cart!`)
+router.push({ name: 'Cart' })
   }
 }
 

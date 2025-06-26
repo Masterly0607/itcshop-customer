@@ -20,19 +20,26 @@ export const useCartStore = defineStore('cart', {
       }
     },
 
-    async addToCart(product, quantity = 1) {
-      try {
-        const res = await axiosClient.post('/cart', {
-          product_id: product.id,
-          quantity,
-        })
-        await this.fetchCart()
-        toast.success('Added to cart!')
-      } catch (err) {
-        toast.error('Failed to add to cart')
-        console.error(err)
-      }
-    },
+  async addToCart(product, quantity = 1) {
+  try {
+    // Optional: Optimistic update
+    if (!this.cartItems.some((item) => item.product_id === product.id)) {
+      this.cartItems.push({ product_id: product.id, quantity, product })
+    }
+
+    const res = await axiosClient.post('/cart', {
+      product_id: product.id,
+      quantity,
+    })
+
+    await this.fetchCart()
+    toast.success('Added to cart!')
+  } catch (err) {
+    toast.error('Failed to add to cart')
+    console.error(err)
+  }
+},
+
 
     async updateQuantity(cartId, quantity) {
       try {
