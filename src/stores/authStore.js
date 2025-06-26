@@ -93,7 +93,7 @@ export const useAuthStore = defineStore('auth', {
     
     sessionStorage.setItem('CUSTOMER', JSON.stringify(this.customer))
 
-    router.push({ name: 'AccountDashboard' })
+    router.push({ name: 'Home' })
   } catch (err) {
     console.error('Google login failed:', err)
     toast.error(err?.response?.data?.message || 'Google login failed')
