@@ -3,6 +3,7 @@ import router from '@/router'
 
 const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL, // when npm run dev, Vue will take from .env.development.
+  withCredentials: true,
 })
 
 // Run before every requests. Every time you call an API with Axios like this: await axiosClient.get('/customer/profile'). Axios does this behind the scenes before it actually sends the request to your Laravel backend: Runs the request.use() function., Adds your token to the request headers., hen finally sends the request to the backend. it’s like a middleware for every outgoing request.
