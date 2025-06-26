@@ -79,7 +79,7 @@ export const useAuthStore = defineStore('auth', {
 },
 
 
-   async loginWithGoogle(token) {
+ async loginWithGoogle(token) {
   this.token = token
   sessionStorage.setItem('TOKEN', token)
 
@@ -87,10 +87,12 @@ export const useAuthStore = defineStore('auth', {
 
   try {
     const res = await axiosClient.get('/profile')
-    this.customer = res.data
-    sessionStorage.setItem('CUSTOMER', JSON.stringify(res.data))
+    
+    // ✅ Updated for CustomerResource response
+    this.customer = res.data.data
+    
+    sessionStorage.setItem('CUSTOMER', JSON.stringify(this.customer))
 
-    // ✅ Use correct route name if needed
     router.push({ name: 'AccountDashboard' })
   } catch (err) {
     console.error('Google login failed:', err)
@@ -98,6 +100,7 @@ export const useAuthStore = defineStore('auth', {
     this.logout()
   }
 },
+
 
 
     logout() {
