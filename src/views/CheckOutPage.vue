@@ -2,104 +2,94 @@
   <SpinnerComponent :show="isPlacingOrder" size="lg" type="loading-bars" />
 
   <section class="container-default">
-    <div class="page-title">CheckOut</div>
-    <div class="mb-5 font-medium text-2xl">Billing Details</div>
+    <div class="page-title">Checkout</div>
 
-    <div class="flex items-start gap-10">
-      <div class="w-1/2">
-        <!-- Billing Form -->
+    <div class="flex flex-col lg:flex-row gap-10 mt-10">
+      <!-- Order Summary -->
+      <div class="w-full lg:w-1/2 space-y-6">
+        <div class="text-xl font-semibold">Your Order</div>
+
+        <div class="space-y-4">
+          <div
+            v-for="item in cartStore.cartItems"
+            :key="item.id"
+            class="flex justify-between items-center border-b pb-2"
+          >
+            <div class="flex items-center gap-3">
+              <img :src="item.image" class="h-10 w-10 object-cover rounded" />
+              <span>{{ item.title }}</span>
+            </div>
+            <div class="font-medium">${{ (item.price * item.quantity).toFixed(2) }}</div>
+          </div>
+        </div>
+
+        <div class="space-y-2 text-sm text-gray-700">
+          <div class="flex justify-between">
+            <span>Subtotal:</span>
+            <span>${{ subtotal.toFixed(2) }}</span>
+          </div>
+          <div v-if="discount > 0" class="flex justify-between text-red-500">
+            <span>Discount:</span>
+            <span>- ${{ discount.toFixed(2) }}</span>
+          </div>
+          <div class="flex justify-between font-bold text-lg border-t pt-2">
+            <span>Total:</span>
+            <span>${{ total }}</span>
+          </div>
+        </div>
       </div>
 
-      <div class="w-1/2">
-        <div class="flex flex-col gap-5">
-          <!-- Cart Items -->
-          <div class="flex flex-col gap-6">
-            <div v-for="item in cartStore.cartItems" :key="item.id" class="flex justify-between">
-              <div class="flex items-center gap-2">
-                <img :src="item.image" class="h-10 w-10 object-cover" />
-                <span>{{ item.title }}</span>
-              </div>
-              <div>${{ (item.price * item.quantity).toFixed(2) }}</div>
-            </div>
+      <!-- Payment Section -->
+      <div class="w-full lg:w-1/2 space-y-6">
+        <div class="text-xl font-semibold">Payment Method</div>
+
+        <div class="flex items-center gap-4">
+          <label class="flex items-center gap-2">
+            <input type="radio" class="radio radio-sm" name="payment" value="cards" v-model="payment" />
+            <span class="text-sm">Cards</span>
+          </label>
+          <img src="/img/visa.png" class="w-8 object-contain" />
+          <img src="/img/mastercard.png" class="w-8 object-contain" />
+        </div>
+
+        <!-- Stripe Card Input -->
+        <div v-if="showCardElement" class="flex flex-col gap-4 border p-4 rounded">
+          <fieldset class="fieldset">
+            <legend class="font-medium text-black text-sm mb-1">Card Details</legend>
+            <div id="card-element" class="bg-white px-3 py-2 border rounded-sm"></div>
+          </fieldset>
+          <p class="text-xs text-gray-500">
+            💡 Use Stripe test card:
+            <span class="font-mono bg-gray-100 px-1 py-0.5 rounded">4242 4242 4242 4242</span>,
+            Exp: <strong>Any future date</strong>, CVC: <strong>Any 3 digits</strong>
+          </p>
+        </div>
+
+        <label class="flex items-center gap-2">
+          <input type="radio" class="radio radio-sm" name="payment" value="cash" v-model="payment" />
+          <span class="text-sm">Cash on delivery</span>
+        </label>
+
+        <!-- Coupon and Submit -->
+        <div class="space-y-3">
+          <div class="flex gap-3">
+            <input
+              v-model="couponCode"
+              type="text"
+              placeholder="Coupon Code"
+              class="input input-neutral w-full"
+            />
+            <button class="btn btn-primary text-white" @click="applyCoupon">Apply</button>
           </div>
-
-          <!-- Totals -->
-          <div>
-            <div class="flex justify-between">
-              <span>Subtotal:</span>
-              <span>${{ subtotal.toFixed(2) }}</span>
-            </div>
-
-            <div class="divider mb-0"></div>
-            <div v-if="discount > 0" class="flex justify-between text-red-500">
-              <span>Discount:</span>
-              <span>- ${{ discount.toFixed(2) }}</span>
-            </div>
-
-            <div class="flex justify-between font-bold text-lg">
-              <span>Total:</span>
-              <span>${{ total }}</span>
-            </div>
-          </div>
-
-          <!-- Payment -->
-          <div class="flex flex-col gap-5">
-            <div class="flex justify-between items-center">
-              <label class="label">
-                <input type="radio" class="radio radio-sm" name="payment" value="cards" v-model="payment" />
-                <span class="text-sm">Cards</span>
-              </label>
-              <div class="flex gap-3">
-                <img src="/img/visa.png" class="w-8 object-contain" />
-                <img src="/img/mastercard.png" class="w-8 object-contain" />
-              </div>
-            </div>
-
-            <!-- Stripe Card Input -->
-            <div v-if="showCardElement" class="ml-6 flex flex-col gap-4">
-              <fieldset class="fieldset">
-                <legend class="fieldset-legend p-1 font-medium text-black">Card number</legend>
-                <div id="card-element" class="input bg-white px-3 py-2 border rounded-sm"></div>
-              </fieldset>
-
-              <div class="grid grid-cols-3 gap-3">
-                <input type="text" class="input input-bordered" placeholder="MM/YY" disabled value="12/34" />
-                <input type="text" class="input input-bordered" placeholder="CVC" disabled value="123" />
-                <input type="text" class="input input-bordered" placeholder="ZIP Code" disabled value="10001" />
-              </div>
-
-              <p class="text-xs text-gray-500">
-                💡 Use Stripe test card:
-                <span class="font-mono bg-gray-100 px-1 py-0.5 rounded">4242 4242 4242 4242</span>,
-                Exp: <strong>12/34</strong>, CVC: <strong>123</strong>
-              </p>
-            </div>
-
-            <div>
-              <label class="label">
-                <input type="radio" class="radio radio-sm" name="payment" value="cash" v-model="payment" />
-                <span class="text-sm">Cash on delivery</span>
-              </label>
-            </div>
-          </div>
-
-          <!-- Coupon and Place Order -->
-          <div>
-            <div class="flex gap-3 mb-5">
-              <input v-model="couponCode" type="text" placeholder="Coupon Code" class="input input-neutral" />
-              <button class="btn btn-primary px-10 py-5 text-white font-light" @click="applyCoupon">
-                Apply Coupon
-              </button>
-            </div>
-            <button class="btn btn-primary px-10 py-5 text-white font-light" @click="placeOrder">
-              Place Order
-            </button>
-          </div>
+          <button class="btn btn-primary w-full py-3 text-white text-base" @click="placeOrder">
+            Place Order
+          </button>
         </div>
       </div>
     </div>
   </section>
 </template>
+
 
 <script setup>
 import SpinnerComponent from '@/components/core/SpinnerComponent.vue'
@@ -127,7 +117,7 @@ let cardElement = null
 const mountStripeCardElement = async () => {
   await nextTick()
   const container = document.getElementById('card-element')
-  if (container && container.children.length === 0) {
+  if (container && container.children.length === 0 && stripe) {
     const elements = stripe.elements()
     cardElement = elements.create('card')
     cardElement.mount(container)
@@ -135,11 +125,9 @@ const mountStripeCardElement = async () => {
 }
 
 onMounted(async () => {
-  stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || 'pk_test_...')
+  stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY)
 
- 
   await cartStore.fetchCart()
-
   subtotal.value = cartStore.cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
   const savedCoupon = sessionStorage.getItem('COUPON')
@@ -193,20 +181,34 @@ const placeOrder = async () => {
     return
   }
 
+  if (!cardElement) {
+    toast.error('Payment form not ready. Please wait a second.')
+    return
+  }
+
   try {
     isPlacingOrder.value = true
 
-    const res = await axiosClient.post('/stripe/payment-intent')
-    const clientSecret = res.data.client_secret
+    // 1.  Call checkout API first to get order_id + total
+    const checkoutRes = await axiosClient.post('/checkout', {
+      checkout_all: true,
+    })
 
+    const orderId = checkoutRes.data.order_id
+
+    // 2. ⚡ Create payment intent using backend
+    const paymentIntentRes = await axiosClient.post('/stripe/payment-intent', {})
+    const clientSecret = paymentIntentRes.data.client_secret
+
+    // 3. Confirm Stripe card payment
     const result = await stripe.confirmCardPayment(clientSecret, {
       payment_method: {
         card: cardElement,
         billing_details: {
           name: 'User',
-          email: 'user@example.com'
-        }
-      }
+          email: 'user@example.com',
+        },
+      },
     })
 
     if (result.error) {
@@ -214,15 +216,17 @@ const placeOrder = async () => {
       return
     }
 
+    // 4.  Update payment + order status
     if (result.paymentIntent.status === 'succeeded') {
-      await axiosClient.post('/checkout/stripe/update-status', {
-        order_id: res.data.order_id,
-        status: 'succeeded'
+      await axiosClient.post('/stripe/update-status', {
+        order_id: orderId,
+        status: 'succeeded',
       })
 
       sessionStorage.removeItem('COUPON')
       toast.success('Payment successful!')
-      router.push({ name: 'OrderConfirmation', params: { orderId: res.data.order_id } })
+
+      router.push({ name: 'OrderConfirmation', params: { orderId } })
     }
   } catch (err) {
     console.error(err)
@@ -231,4 +235,7 @@ const placeOrder = async () => {
     isPlacingOrder.value = false
   }
 }
+
+
 </script>
+
